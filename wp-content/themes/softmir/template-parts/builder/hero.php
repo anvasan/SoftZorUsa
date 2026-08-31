@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 // Hero Module - uses ACF page fields (registered in acf-home-options.php)
 $page_id = get_option('page_on_front');
 $title = get_field('home_header_title', $page_id) ?: __('Proven software for business automation', 'softmir');
-$text = get_field('home_header_subtitle', $page_id) ?: __('Your business can''t wait. Find effective CRM and ERP solutions ready for implementation today.', 'softmir');
+$text = get_field('home_header_subtitle', $page_id) ?: __('Your business can\'t wait. Find effective CRM and ERP solutions ready for implementation today.', 'softmir');
 $btn_text = get_field('home_header_btn_text', $page_id) ?: __('Go to catalog', 'softmir');
 $btn_link = get_field('home_header_btn_url', $page_id) ?: get_post_type_archive_link('software');
 $is_quiz_enabled = get_theme_mod('softmir_enable_quiz', false);
