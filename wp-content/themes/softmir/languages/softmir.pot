@@ -1,0 +1,1145 @@
+# Translation Template for SoftMir Theme
+# Copyright (C) 2026 SoftMir
+# This file is distributed under the same license as the SoftMir theme.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: SoftMir Theme 1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-19 20:15+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+
+#: template-parts/builder/testimonials.php:22
+msgid "CEO, ЛогистикМастер"
+msgstr ""
+
+#: template-parts/builder/partnership.php:26
+msgid "CRM система"
+msgstr ""
+
+#: page-login.php:43
+msgid "Email или имя пользователя"
+msgstr ""
+
+#: page-login.php:46
+msgid "Email или логин"
+msgstr ""
+
+#: page-profile.php:71
+msgid "Email не подтверждён"
+msgstr ""
+
+#: inc/auth.php:357
+msgid "Email подтверждён! Теперь вы можете войти."
+msgstr ""
+
+#: inc/auth.php:380
+msgid "Email уже подтверждён."
+msgstr ""
+
+#: template-parts/builder/partnership.php:33
+msgid "SaaS платформа"
+msgstr ""
+
+#: inc/block-patterns.php:10
+msgid "SoftMir"
+msgstr ""
+
+#: template-parts/builder/advantages.php:4
+msgid "SoftMir — ваш надёжный проводник в мире бизнес-ПО"
+msgstr ""
+
+#: inc/auth.php:311
+msgid "[%s] Подтвердите ваш email"
+msgstr ""
+
+#: inc/auth.php:444
+msgid "[%s] Сброс пароля"
+msgstr ""
+
+#: inc/auth.php:660
+msgid "Автор"
+msgstr ""
+
+#: header.php:76
+msgid "Админ-панель"
+msgstr ""
+
+#: inc/auth.php:658
+msgid "Администратор"
+msgstr ""
+
+#: functions.php:211
+msgid "Атрибут"
+msgstr ""
+
+#: functions.php:215
+msgid "Атрибуты"
+msgstr ""
+
+#: functions.php:210
+#: functions.php:218
+msgid "Атрибуты ПО"
+msgstr ""
+
+#: functions.php:217
+msgid "Атрибуты не найдены"
+msgstr ""
+
+#: template-parts/builder/advantages.php:24
+msgid "Совместные закупки"
+msgstr ""
+
+#: template-parts/builder/testimonials.php:8
+msgid "Благодаря SoftMir мы нашли CRM-систему, которая идеально подошла под наши процессы. Сэкономили недели на поиск и тестирование."
+msgstr ""
+
+#: header.php:40
+msgid "Блог"
+msgstr ""
+
+#: inc/shortcodes.php:195
+#: taxonomy-software_category.php:116
+msgid "В этой категории пока нет программ."
+msgstr ""
+
+#: template-parts/builder/popular_products.php:92
+msgid "В этой категории пока нет продуктов."
+msgstr ""
+
+#: page-login.php:54
+msgid "Ваш пароль"
+msgstr ""
+
+#: template-parts/builder/partnership.php:19
+msgid "Ваш продукт"
+msgstr ""
+
+#: page-reset-password.php:26
+msgid "Введите email для получения ссылки сброса"
+msgstr ""
+
+#: template-parts/builder/cta.php:13
+msgid "Введите ваш email"
+msgstr ""
+
+#: inc/auth.php:160
+msgid "Введите корректный email адрес."
+msgstr ""
+
+#: inc/auth.php:418
+msgid "Введите корректный email."
+msgstr ""
+
+#: page-reset-password.php:22
+msgid "Введите новый пароль для вашего аккаунта"
+msgstr ""
+
+#: functions.php:23
+msgid "Верхнее меню (Header)"
+msgstr ""
+
+#: single-software.php:184
+msgid "Видео-обзор"
+msgstr ""
+
+#: page-login.php:17
+msgid "Войдите, чтобы продолжить"
+msgstr ""
+
+#: header.php:92
+#: page-login.php:69
+#: page-register.php:96
+msgid "Войти"
+msgstr ""
+
+#: page-login.php:30
+msgid "Войти через Google"
+msgstr ""
+
+#: functions.php:82
+msgid "Все интеграторы"
+msgstr ""
+
+#: functions.php:103
+#: template-parts/builder/categories.php:22
+#: template-parts/search-bar.php:69
+msgid "Все категории"
+msgstr ""
+
+#: inc/auth.php:148
+msgid "Все поля обязательны для заполнения."
+msgstr ""
+
+#: functions.php:57
+msgid "Все программы"
+msgstr ""
+
+#: inc/auth.php:70
+msgid "Вход"
+msgstr ""
+
+#: page-login.php:16
+msgid "Вход в аккаунт"
+msgstr ""
+
+#: inc/google-oauth.php:47
+msgid "Вход через Google отменён."
+msgstr ""
+
+#: inc/auth.php:296
+msgid "Вы успешно вышли из системы."
+msgstr ""
+
+#: template-parts/builder/categories.php:4
+msgid "Выберите интересующую категорию"
+msgstr ""
+
+#: header.php:83
+#: page-profile.php:63
+msgid "Выйти"
+msgstr ""
+
+#: footer.php:29
+#: header.php:38
+#: page-categories.php:11
+#: single-software.php:21
+#: taxonomy-software_category.php:5
+#: template-parts/search-bar.php:96
+msgid "Главная"
+msgstr ""
+
+#: archive-software.php:58
+msgid "Да"
+msgstr ""
+
+#: archive-software.php:193
+#: taxonomy-software_category.php:108
+msgid "Далее"
+msgstr ""
+
+#: page-profile.php:140
+msgid "Дата регистрации"
+msgstr ""
+
+#: template-parts/builder/advantages.php:10
+msgid "Детальные обзоры каждого продукта от наших специалистов с реальным опытом использования."
+msgstr ""
+
+#: template-parts/builder/testimonials.php:10
+msgid "Директор по развитию, ТехноПро"
+msgstr ""
+
+#: functions.php:54
+msgid "Добавить ПО"
+msgstr ""
+
+#: functions.php:212
+msgid "Добавить атрибут"
+msgstr ""
+
+#: functions.php:79
+msgid "Добавить интегратора"
+msgstr ""
+
+#: functions.php:106
+msgid "Добавить категорию"
+msgstr ""
+
+#: functions.php:80
+msgid "Добавить нового интегратора"
+msgstr ""
+
+#: functions.php:55
+msgid "Добавить новое ПО"
+msgstr ""
+
+#: functions.php:213
+msgid "Добавить новый атрибут"
+msgstr ""
+
+#: inc/auth.php:280
+#: inc/google-oauth.php:197
+msgid "Добро пожаловать, %s!"
+msgstr ""
+
+#: inc/auth.php:427
+msgid "Если аккаунт с таким email существует, вы получите письмо со ссылкой для сброса пароля."
+msgstr ""
+
+#: template-parts/builder/partnership.php:3
+msgid "Есть готовый софт?"
+msgstr ""
+
+#: page-login.php:66
+msgid "Забыли пароль?"
+msgstr ""
+
+#: inc/auth.php:244
+msgid "Заполните все поля."
+msgstr ""
+
+#: page-login.php:64
+msgid "Запомнить меня"
+msgstr ""
+
+#: page-register.php:30
+msgid "Зарегистрироваться через Google"
+msgstr ""
+
+#: page-login.php:73
+msgid "Зарегистрируйтесь"
+msgstr ""
+
+#: page-profile.php:106
+msgid "Изменить пароль"
+msgstr ""
+
+#: page-register.php:43
+msgid "Имя пользователя"
+msgstr ""
+
+#: inc/auth.php:154
+msgid "Имя пользователя должно содержать минимум 3 символа."
+msgstr ""
+
+#: functions.php:78
+#: inc/auth.php:663
+msgid "Интегратор"
+msgstr ""
+
+#: inc/auth.php:12
+msgid "Интегратор (Vendor)"
+msgstr ""
+
+#: functions.php:77
+#: functions.php:83
+msgid "Интеграторы"
+msgstr ""
+
+#: footer.php:40
+msgid "Информация"
+msgstr ""
+
+#: page-profile.php:136
+msgid "Информация об аккаунте"
+msgstr ""
+
+#: header.php:39
+#: single-software.php:23
+msgid "Каталог"
+msgstr ""
+
+#: footer.php:30
+#: functions.php:52
+#: functions.php:60
+#: taxonomy-software_category.php:7
+msgid "Каталог ПО"
+msgstr ""
+
+#: footer.php:50
+msgid "Каталог бизнес-ПО. Все права защищены."
+msgstr ""
+
+#: template-parts/builder/hero.php:5
+msgid "Каталог проверенных CRM-систем, инструментов управления проектами и решений для e-commerce."
+msgstr ""
+
+#: functions.php:107
+#: single-software.php:99
+#: taxonomy-software_category.php:34
+msgid "Категории"
+msgstr ""
+
+#: functions.php:100
+#: functions.php:122
+#: page-categories.php:13
+msgid "Категории ПО"
+msgstr ""
+
+#: inc/shortcodes.php:17
+#: template-parts/builder/categories.php:3
+msgid "Категории программного обеспечения"
+msgstr ""
+
+#: archive-software.php:169
+msgid "Категория"
+msgstr ""
+
+#: functions.php:101
+msgid "Категория ПО"
+msgstr ""
+
+#: single-software.php:116
+msgid "Ключевые особенности"
+msgstr ""
+
+#: template-parts/builder/testimonials.php:20
+msgid "Консультация экспертов помогла определиться с ERP-системой. Рекомендую всем, кто ищет бизнес-софт."
+msgstr ""
+
+#: footer.php:32
+#: header.php:42
+msgid "Контакты"
+msgstr ""
+
+#: header.php:71
+#: inc/auth.php:72
+msgid "Личный кабинет"
+msgstr ""
+
+#: page-profile.php:148
+msgid "Логин"
+msgstr ""
+
+#: archive-software.php:65
+msgid "Любой"
+msgstr ""
+
+#: header.php:27
+msgid "Меню"
+msgstr ""
+
+#: header.php:55
+msgid "Меню пользователя"
+msgstr ""
+
+#: page-register.php:46
+msgid "Минимум 3 символа"
+msgstr ""
+
+#: page-profile.php:113
+#: page-register.php:62
+#: page-reset-password.php:44
+msgid "Минимум 8 символов"
+msgstr ""
+
+#: template-parts/builder/partnership.php:4
+msgid "Мы найдём для него клиентов."
+msgstr ""
+
+#: inc/block-patterns.php:85
+msgid "Навигатор по бизнесу (Сетка 4 колонки)"
+msgstr ""
+
+#: footer.php:22
+msgid "Навигация"
+msgstr ""
+
+#: archive-software.php:192
+#: taxonomy-software_category.php:107
+msgid "Назад"
+msgstr ""
+
+#: archive-software.php:129
+#: taxonomy-software_category.php:90
+msgid "Найдено:"
+msgstr ""
+
+#: template-parts/builder/hero.php:4
+msgid "Найдите идеальное ПО для вашего бизнеса"
+msgstr ""
+
+#: archive-software.php:6
+msgid "Найдите оптимальное решение для вашего бизнеса среди проверенных продуктов"
+msgstr ""
+
+#: single-software.php:303
+msgid "Написать отзыв"
+msgstr ""
+
+#: inc/block-patterns.php:16
+msgid "Наши преимущества (3 колонки)"
+msgstr ""
+
+#: template-parts/builder/advantages.php:25
+msgid "Объединяйтесь с другими компаниями и получайте эксклюзивные скидки от разработчиков ПО."
+msgstr ""
+
+#: single-software.php:335
+msgid "Наши эксперты помогут с выбором и внедрением."
+msgstr ""
+
+#: functions.php:59
+msgid "Не найдено"
+msgstr ""
+
+#: page-profile.php:153
+msgid "Не привязан"
+msgstr ""
+
+#: inc/google-oauth.php:117
+msgid "Не удалось получить email от Google."
+msgstr ""
+
+#: inc/auth.php:331
+msgid "Неверная ссылка подтверждения."
+msgstr ""
+
+#: inc/auth.php:477
+msgid "Неверные данные."
+msgstr ""
+
+#: inc/auth.php:340
+msgid "Неверный или устаревший токен подтверждения."
+msgstr ""
+
+#: inc/auth.php:486
+msgid "Неверный или устаревший токен."
+msgstr ""
+
+#: inc/auth.php:258
+msgid "Неверный логин или пароль."
+msgstr ""
+
+#: page-login.php:73
+msgid "Нет аккаунта?"
+msgstr ""
+
+#: functions.php:24
+msgid "Нижнее меню (Footer)"
+msgstr ""
+
+#: page-profile.php:110
+#: page-reset-password.php:21
+#: page-reset-password.php:41
+msgid "Новый пароль"
+msgstr ""
+
+#: inc/auth.php:550
+msgid "Новый пароль должен содержать минимум 8 символов."
+msgstr ""
+
+#: template-parts/builder/cta.php:3
+msgid "Нужна помощь в выборе ПО?"
+msgstr ""
+
+#: single-software.php:334
+msgid "Нужна помощь?"
+msgstr ""
+
+#: footer.php:31
+#: header.php:41
+msgid "О нас"
+msgstr ""
+
+#: template-parts/builder/partnership.php:6
+msgid "Обсудить сотрудничество"
+msgstr ""
+
+#: archive-software.php:171
+msgid "Описание"
+msgstr ""
+
+#: single-software.php:235
+msgid "Оставить отзыв"
+msgstr ""
+
+#: template-parts/builder/cta.php:4
+msgid "Оставьте email и наши эксперты помогут подобрать идеальное решение для вашего бизнеса."
+msgstr ""
+
+#: page-profile.php:107
+msgid "Оставьте пустым, если не хотите менять пароль"
+msgstr ""
+
+#: template-parts/builder/testimonials.php:3
+msgid "Отзывы клиентов"
+msgstr ""
+
+#: single-software.php:225
+msgid "Отзывы пользователей"
+msgstr ""
+
+#: page-profile.php:89
+msgid "Отображаемое имя"
+msgstr ""
+
+#: template-parts/builder/cta.php:5
+msgid "Отправить"
+msgstr ""
+
+#: page-profile.php:72
+msgid "Отправить письмо повторно"
+msgstr ""
+
+#: inc/auth.php:269
+msgid "Отправить повторно"
+msgstr ""
+
+#: page-reset-password.php:76
+msgid "Отправить ссылку"
+msgstr ""
+
+#: template-parts/builder/testimonials.php:14
+msgid "Очень удобный каталог с честными обзорами. Выбрали систему управления проектами за один день вместо обычных двух недель."
+msgstr ""
+
+#: inc/google-oauth.php:65
+msgid "Ошибка авторизации Google."
+msgstr ""
+
+#: inc/google-oauth.php:59
+msgid "Ошибка безопасности OAuth. Попробуйте снова."
+msgstr ""
+
+#: inc/auth.php:411
+#: inc/auth.php:466
+#: inc/auth.php:527
+msgid "Ошибка безопасности."
+msgstr ""
+
+#: inc/auth.php:135
+#: inc/auth.php:234
+msgid "Ошибка безопасности. Попробуйте снова."
+msgstr ""
+
+#: inc/google-oauth.php:109
+msgid "Ошибка получения профиля Google."
+msgstr ""
+
+#: inc/google-oauth.php:95
+msgid "Ошибка получения токена Google."
+msgstr ""
+
+#: inc/google-oauth.php:87
+msgid "Ошибка связи с Google. Попробуйте позже."
+msgstr ""
+
+#: inc/google-oauth.php:166
+msgid "Ошибка создания аккаунта: %s"
+msgstr ""
+
+#: archive-software.php:168
+msgid "ПО"
+msgstr ""
+
+#: inc/auth.php:172
+#: inc/auth.php:505
+#: inc/auth.php:555
+msgid "Пароли не совпадают."
+msgstr ""
+
+#: page-login.php:51
+#: page-register.php:59
+msgid "Пароль"
+msgstr ""
+
+#: inc/auth.php:166
+#: inc/auth.php:499
+msgid "Пароль должен содержать минимум 8 символов."
+msgstr ""
+
+#: inc/auth.php:515
+msgid "Пароль успешно изменён! Войдите с новым паролем."
+msgstr ""
+
+#: template-parts/builder/hero.php:6
+msgid "Перейти в каталог"
+msgstr ""
+
+#: inc/auth.php:399
+msgid "Письмо с подтверждением отправлено повторно."
+msgstr ""
+
+#: page-profile.php:124
+#: page-register.php:74
+#: page-reset-password.php:56
+msgid "Повторите пароль"
+msgstr ""
+
+#: inc/auth.php:388
+msgid "Подождите 2 минуты перед повторной отправкой."
+msgstr ""
+
+#: inc/auth.php:662
+msgid "Подписчик"
+msgstr ""
+
+#: page-profile.php:72
+msgid "Подтвердите ваш email для полного доступа."
+msgstr ""
+
+#: page-profile.php:121
+msgid "Подтвердите новый пароль"
+msgstr ""
+
+#: page-register.php:71
+#: page-reset-password.php:53
+msgid "Подтвердите пароль"
+msgstr ""
+
+#: inc/auth.php:122
+msgid "Пожалуйста, войдите в систему."
+msgstr ""
+
+#: inc/auth.php:269
+msgid "Пожалуйста, подтвердите ваш email."
+msgstr ""
+
+#: template-parts/search-bar.php:89
+msgid "Поиск"
+msgstr ""
+
+#: functions.php:58
+msgid "Поиск ПО"
+msgstr ""
+
+#: functions.php:216
+msgid "Поиск атрибутов"
+msgstr ""
+
+#: functions.php:102
+msgid "Поиск категорий"
+msgstr ""
+
+#: page-categories.php:23
+msgid "Поиск по категориям..."
+msgstr ""
+
+#: template-parts/search-bar.php:84
+msgid "Поиск по названию..."
+msgstr ""
+
+#: single-software.php:70
+#: single-software.php:59
+msgid "Показать больше..."
+msgstr ""
+
+#: inc/shortcodes.php:190
+msgid "Показать все в %s"
+msgstr ""
+
+#: single-software.php:75
+msgid "Показать меньше..."
+msgstr ""
+
+#: page-login.php:55
+#: page-profile.php:114
+#: page-register.php:63
+#: page-reset-password.php:45
+msgid "Показать пароль"
+msgstr ""
+
+#: template-parts/builder/blog.php:4
+msgid "Полезные материалы о бизнес-ПО"
+msgstr ""
+
+#: footer.php:42
+msgid "Политика конфиденциальности"
+msgstr ""
+
+#: inc/auth.php:373
+msgid "Пользователь не найден."
+msgstr ""
+
+#: archive-software.php:201
+msgid "Попробуйте изменить параметры фильтрации"
+msgstr ""
+
+#: template-parts/builder/popular_products.php:3
+msgid "Популярные подборки"
+msgstr ""
+
+#: single-software.php:282
+msgid "Посетить сайт"
+msgstr ""
+
+#: template-parts/builder/blog.php:3
+msgid "Последние статьи"
+msgstr ""
+
+#: inc/shortcodes.php:18
+msgid "Посмотреть все"
+msgstr ""
+
+#: single-software.php:256
+msgid "Похожие продукты"
+msgstr ""
+
+#: template-parts/builder/advantages.php:3
+msgid "Почему выбирают нас"
+msgstr ""
+
+#: single-software.php:132
+msgid "Преимущества"
+msgstr ""
+
+#: page-profile.php:153
+msgid "Привязан"
+msgstr ""
+
+#: page-profile.php:152
+msgid "Привязка Google"
+msgstr ""
+
+#: archive-software.php:80
+msgid "Применить"
+msgstr ""
+
+#: functions.php:53
+msgid "Программа"
+msgstr ""
+
+#: archive-software.php:5
+msgid "Программное обеспечение"
+msgstr ""
+
+#: taxonomy-software_category.php:24
+msgid "Программное обеспечение в категории «%s»"
+msgstr ""
+
+#: archive-software.php:200
+msgid "Программы не найдены"
+msgstr ""
+
+#: inc/auth.php:567
+msgid "Профиль обновлён."
+msgstr ""
+
+#: template-parts/builder/partnership.php:5
+msgid "Разместите ваш продукт в нашем каталоге и получите доступ к тысячам потенциальных клиентов, которые уже ищут решения."
+msgstr ""
+
+#: template-parts/builder/advantages.php:19
+msgid "Реальные отзывы"
+msgstr ""
+
+#: inc/auth.php:71
+#: page-register.php:16
+msgid "Регистрация"
+msgstr ""
+
+#: inc/auth.php:222
+msgid "Регистрация успешна! Проверьте вашу почту для подтверждения email."
+msgstr ""
+
+#: page-register.php:91
+msgid "Регистрируясь, вы принимаете %1$sУсловия использования%2$s и %3$sПолитику конфиденциальности%4$s."
+msgstr ""
+
+#: functions.php:56
+msgid "Редактировать ПО"
+msgstr ""
+
+#: functions.php:214
+msgid "Редактировать атрибут"
+msgstr ""
+
+#: functions.php:81
+msgid "Редактировать интегратора"
+msgstr ""
+
+#: functions.php:105
+msgid "Редактировать категорию"
+msgstr ""
+
+#: page-profile.php:82
+msgid "Редактировать профиль"
+msgstr ""
+
+#: inc/auth.php:659
+msgid "Редактор"
+msgstr ""
+
+#: archive-software.php:170
+#: single-software.php:299
+msgid "Рейтинг"
+msgstr ""
+
+#: single-software.php:291
+msgid "Рекомендуемый продукт"
+msgstr ""
+
+#: functions.php:104
+msgid "Родительская категория"
+msgstr ""
+
+#: page-profile.php:144
+msgid "Роль"
+msgstr ""
+
+#: template-parts/builder/testimonials.php:16
+msgid "Руководитель отдела IT, ФинГрупп"
+msgstr ""
+
+#: inc/auth.php:73
+#: page-reset-password.php:25
+msgid "Сброс пароля"
+msgstr ""
+
+#: archive-software.php:22
+msgid "Сбросить"
+msgstr ""
+
+#: single-software.php:336
+msgid "Связаться"
+msgstr ""
+
+#: inc/block-patterns.php:86
+msgid "Секция для выбора сегмента бизнеса."
+msgstr ""
+
+#: inc/block-patterns.php:17
+msgid "Секция с заголовком и 3 карточками преимуществ."
+msgstr ""
+
+#: footer.php:7
+msgid "Сертифицированный партнёр ведущих вендоров ПО. Помогаем бизнесу расти, внедряя лучшие IT-решения."
+msgstr ""
+
+#: archive-software.php:132
+msgid "Сетка"
+msgstr ""
+
+#: single-software.php:213
+msgid "Скриншот интерфейса"
+msgstr ""
+
+#: single-software.php:209
+msgid "Скриншоты"
+msgstr ""
+
+#: footer.php:62
+msgid "Скрыть"
+msgstr ""
+
+#: template-parts/builder/popular_products.php:73
+msgid "Смотреть все"
+msgstr ""
+
+#: template-parts/builder/popular_products.php:85
+msgid "Смотреть все предложения в категории «%s»"
+msgstr ""
+
+#: page-register.php:17
+msgid "Создайте аккаунт для доступа к платформе"
+msgstr ""
+
+#: page-register.php:88
+msgid "Создать аккаунт"
+msgstr ""
+
+#: page-profile.php:128
+msgid "Сохранить изменения"
+msgstr ""
+
+#: archive-software.php:135
+msgid "Список"
+msgstr ""
+
+#: page-categories.php:19
+msgid "Список категорий и подкатегорий"
+msgstr ""
+
+#: template-parts/builder/advantages.php:14
+msgid "Сравнение решений"
+msgstr ""
+
+#: inc/auth.php:493
+msgid "Ссылка для сброса пароля истекла. Запросите новую."
+msgstr ""
+
+#: inc/auth.php:347
+msgid "Ссылка подтверждения истекла. Запросите новую."
+msgstr ""
+
+#: single-software.php:164
+msgid "Сферы применения"
+msgstr ""
+
+#: archive-software.php:138
+msgid "Таблица"
+msgstr ""
+
+#: single-software.php:148
+msgid "Тарифы и цены"
+msgstr ""
+
+#: page-register.php:79
+msgid "Тип аккаунта"
+msgstr ""
+
+#: template-parts/builder/advantages.php:15
+msgid "Удобные таблицы сравнения функций, цен и условий для выбора лучшего варианта."
+msgstr ""
+
+#: page-register.php:96
+msgid "Уже есть аккаунт?"
+msgstr ""
+
+#: footer.php:43
+msgid "Условия использования"
+msgstr ""
+
+#: page-reset-password.php:60
+msgid "Установить новый пароль"
+msgstr ""
+
+#: inc/auth.php:661
+msgid "Участник"
+msgstr ""
+
+#: archive-software.php:21
+msgid "Фильтры"
+msgstr ""
+
+#: single-software.php:319
+msgid "Целевые рынки"
+msgstr ""
+
+#: template-parts/builder/advantages.php:20
+msgid "Честные отзывы от пользователей, которые уже внедрили эти решения в своём бизнесе."
+msgstr ""
+
+#: template-parts/builder/testimonials.php:4
+msgid "Что говорят наши клиенты о сотрудничестве"
+msgstr ""
+
+#: template-parts/builder/advantages.php:9
+msgid "Экспертные обзоры"
+msgstr ""
+
+#: inc/auth.php:178
+msgid "Это имя пользователя уже занято."
+msgstr ""
+
+#: inc/auth.php:184
+msgid "Этот email уже зарегистрирован."
+msgstr ""
+
+#: page-login.php:34
+#: page-register.php:34
+msgid "или"
+msgstr ""
+
+#: archive-software.php:129
+#: taxonomy-software_category.php:90
+msgid "продуктов"
+msgstr ""
+
+#: single-software.php:43
+msgid "просм."
+msgstr ""
+
+#: template-parts/builder/popular_products.php:47
+msgid "решений"
+msgstr ""
+
+#: page-reset-password.php:82
+msgid "← Вернуться к входу"
+msgstr ""
+
+#: page-profile.php:45
+msgid "✓ Email подтверждён"
+msgstr ""
+
+#: page-profile.php:48
+msgid "✗ Email не подтверждён"
+msgstr ""
+
+#: page-register.php:83
+msgid "🏢 Интегратор (Vendor)"
+msgstr ""
+
+#: page-register.php:82
+msgid "👤 Пользователь"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Разместите ваш продукт"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Заполните форму — мы создадим карточку вашего продукта и найдём для него клиентов. Бесплатно."
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Название компании"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Название продукта"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "URL сайта продукта"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "— Выберите категорию —"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Контактное лицо"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Комментарий"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Расскажите кратко о вашем продукте..."
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Отправить заявку"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "HR / Управление персоналом"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Маркетинг и Аналитика"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Финансы и Бухгалтерия"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Управление проектами"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Безопасность"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "AI / Автоматизация"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Инструменты разработки"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Другое"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Заполните все обязательные поля."
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "ООО Компания"
+msgstr ""
+
+#: template-parts/partner-modal.php
+msgid "Иван Иванов"
+msgstr ""
+
+#: template-parts/builder/partnership.php
+msgid "Разместить продукт"
+msgstr ""
+

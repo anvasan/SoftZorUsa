@@ -1,0 +1,975 @@
+{
+    "description": "DO NOT DELETE THIS FILE. This file is used to keep track of which files have been synced in the most recent deployment. If you delete this file a resync will need to be done (which can take a while) - read more: https://github.com/SamKirkland/FTP-Deploy-Action",
+    "version": "1.0.0",
+    "generatedTime": 1785851877604,
+    "data": [
+        {
+            "type": "file",
+            "name": "archive-software.php",
+            "size": 15813,
+            "hash": "579a222feda15411e07a9ab36c2532627c6121eae76e616a8e3288dbdd548dd4"
+        },
+        {
+            "type": "folder",
+            "name": "assets"
+        },
+        {
+            "type": "file",
+            "name": "critical.css",
+            "size": 2396,
+            "hash": "7699b22838ea7d26495326d17a8193efab1e49cf0e4bd8a82ba0a80266acae3f"
+        },
+        {
+            "type": "file",
+            "name": "footer.php",
+            "size": 6959,
+            "hash": "94c25794490439669fb58b76e1e7965f68237dcd2d7954b035c344a75b92a983"
+        },
+        {
+            "type": "file",
+            "name": "front-page.php",
+            "size": 1424,
+            "hash": "2047c07eb2559efef17e95be9e8ccb8bcf2952176f67027ca525c8f1173c1416"
+        },
+        {
+            "type": "file",
+            "name": "functions.php",
+            "size": 61144,
+            "hash": "2970f519f5430261432e593148b8bf641632f67a33a96d2dd4657a6c903a684d"
+        },
+        {
+            "type": "file",
+            "name": "functions.php.bak-wysiwyg",
+            "size": 47426,
+            "hash": "568e446c62890b2a0f2aa4f5797896d1feecefd00135732e8bb575739a1a21be"
+        },
+        {
+            "type": "file",
+            "name": "generate-pot.php",
+            "size": 3754,
+            "hash": "d0256910b9033cd276ca99172b77f08232ad71a33db7a61495dc453d1ef178eb"
+        },
+        {
+            "type": "file",
+            "name": "header.php",
+            "size": 9627,
+            "hash": "760a765cad199e90d4ff16aaa14f8292d2f69c837bfa4679cdf18fb77a9172ce"
+        },
+        {
+            "type": "file",
+            "name": "home.php",
+            "size": 8654,
+            "hash": "c2a195ce9d16a71538a604deaf236ed22578cb4c04acf71869761107dd420e7a"
+        },
+        {
+            "type": "folder",
+            "name": "inc"
+        },
+        {
+            "type": "file",
+            "name": "index.php",
+            "size": 220,
+            "hash": "5c61ee9280c0e28f56c13f9179bf963ab92e3d15866ab4dbb8e049c302ed0b5d"
+        },
+        {
+            "type": "folder",
+            "name": "js"
+        },
+        {
+            "type": "folder",
+            "name": "languages"
+        },
+        {
+            "type": "file",
+            "name": "mark-all-scout-reviewed.php",
+            "size": 3731,
+            "hash": "a07ac918accffca3e1f36e431c2be82c3c2555245bb11bf2c1283bb9bb4f0e83"
+        },
+        {
+            "type": "file",
+            "name": "migration.php",
+            "size": 12249,
+            "hash": "9be8b8dffdd33fffcccc0c3a4ae8cc501fd1e33ebe55db2d1bdbbcb1178cbf72"
+        },
+        {
+            "type": "file",
+            "name": "page-categories.php",
+            "size": 3656,
+            "hash": "06d3771a108936f974e1a05f9aa10d8a361ea1aa1c37a5639d795646d2fe913d"
+        },
+        {
+            "type": "file",
+            "name": "page-compare.php",
+            "size": 11567,
+            "hash": "aa90c6f971dc3067066dd94b4d29464e8f749ea31db2aa6532258c2e410d1b73"
+        },
+        {
+            "type": "file",
+            "name": "page-login.php",
+            "size": 4481,
+            "hash": "c7cb083ddb9efddc928dc6acaeed83eb0a5da3076bc4f5070e4e3c26eb55b456"
+        },
+        {
+            "type": "file",
+            "name": "page-profile.php",
+            "size": 11597,
+            "hash": "6324b2590a452864cd1f7f06ec3edaf3ca4bb3e3a4ce8e6cce5e95d195d0eacc"
+        },
+        {
+            "type": "file",
+            "name": "page-register.php",
+            "size": 6484,
+            "hash": "51b5fb9bf89b9fc3b01149d3b3db6f961445a00348793e9dfcc0550884944e5a"
+        },
+        {
+            "type": "file",
+            "name": "page-reset-password.php",
+            "size": 4918,
+            "hash": "5f1033d177eabfe03f1282b0dbaf7521ea15ccec2f2cfe41bf2eef249c28d52a"
+        },
+        {
+            "type": "file",
+            "name": "page.php",
+            "size": 332,
+            "hash": "bbd359978375f7157ad3ec2188fd6330607db98b474dd277ab1b395da8ca0b84"
+        },
+        {
+            "type": "file",
+            "name": "single-software.php",
+            "size": 34199,
+            "hash": "0fcd7cdd59d5740557ff6c31df829d5d5dea6b5df09cdb04d1c20b745dd8e77f"
+        },
+        {
+            "type": "file",
+            "name": "single-software.php.bak",
+            "size": 16852,
+            "hash": "af392cf4b4f4904220ffc71dffb785b2eb466d99320e1ebb4e2d327adc2ac974"
+        },
+        {
+            "type": "file",
+            "name": "single-software.php.bak-wysiwyg",
+            "size": 31774,
+            "hash": "3d1e8957646643bc760d8db2b9177709d142c29875117cefabfc1177182fdc68"
+        },
+        {
+            "type": "file",
+            "name": "single.php",
+            "size": 15855,
+            "hash": "0e104d6fa2f020ae853b472bdd28090575060aaade10624923bd18122a73fcf9"
+        },
+        {
+            "type": "file",
+            "name": "style.css",
+            "size": 155868,
+            "hash": "84a849f1df53018ce5c4affbcea0fd2d3c3f0ed2c98d873692e58deda53d9bba"
+        },
+        {
+            "type": "file",
+            "name": "style_backup.css",
+            "size": 188242,
+            "hash": "f69556c9fa080cb61c3416241ea8e07ea7e68808d69cd7b455697177b983fc3c"
+        },
+        {
+            "type": "file",
+            "name": "taxonomy-software_category.php",
+            "size": 463,
+            "hash": "ceb0a8d3605f1a6ea59fceca3efe8b6509151771954e9df191beca73acf5910b"
+        },
+        {
+            "type": "folder",
+            "name": "template-parts"
+        },
+        {
+            "type": "folder",
+            "name": "tests"
+        },
+        {
+            "type": "folder",
+            "name": "tools"
+        },
+        {
+            "type": "folder",
+            "name": "assets/css"
+        },
+        {
+            "type": "folder",
+            "name": "assets/img"
+        },
+        {
+            "type": "folder",
+            "name": "assets/js"
+        },
+        {
+            "type": "file",
+            "name": "inc/acf-home-options.php",
+            "size": 3561,
+            "hash": "8bab2ab863c08d819e94a14241c23504e68907dd090a39cdf5bc58bb4cd97727"
+        },
+        {
+            "type": "file",
+            "name": "inc/acf-fields.php",
+            "size": 5645,
+            "hash": "5c6a2a1bf9c1d21703bfdd46e3e640cef68883566e9095779b853550cb8362b4"
+        },
+        {
+            "type": "file",
+            "name": "inc/acf-home.php",
+            "size": 9325,
+            "hash": "857a994a3d475f88dff38559abaaad065ed26cff17a02d20e69cfedb3d61b437"
+        },
+        {
+            "type": "file",
+            "name": "inc/acf-pricing.php",
+            "size": 4483,
+            "hash": "7f12e6c6c3af307154210ba058713776429bd16a0cbc9be5f055db09536e6462"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-analytics.php",
+            "size": 24306,
+            "hash": "f0838fb60fad422b0b25b18c2d08aa48d89eb8ef6fe986eddebc888ea6ed7f4b"
+        },
+        {
+            "type": "file",
+            "name": "inc/acf-software.php",
+            "size": 5600,
+            "hash": "a98c5de868b51f7a696c85062a2e45fbf60a1029a13d98b8d1cc5c81561e7b3e"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-autofill.php",
+            "size": 45012,
+            "hash": "2872d7e8c01d24d248145ba6719b8b9fbba6570670be5ac17217cf9ba6ddaa6f"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-group-buying.php",
+            "size": 16726,
+            "hash": "421615561f4628437caa3c72823589accc9a03e3f2b0da36790c69b9ba03bbce"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-import-export.php",
+            "size": 25282,
+            "hash": "21ea17909450f4f6bffdcb7940d424628833e65d8c2a47c2c52b9a3243ef5d15"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-partner-requests.php",
+            "size": 4071,
+            "hash": "6692266694cc83ff3594aa29f999ce71d118bc54d8ce9b5c1b19b99ae4aba9e3"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-category-ai.php",
+            "size": 11243,
+            "hash": "701c76db29f73caa7317d45755f3f75abd26bd2c5af87bb388b5b335c98d488b"
+        },
+        {
+            "type": "file",
+            "name": "inc/affiliate-cloak.php",
+            "size": 1665,
+            "hash": "1c3d6e26795627651223663224bbec148d74688735585936b961431288015bbc"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-autopost.php",
+            "size": 17039,
+            "hash": "e25ff21408d9a8beb51287526a1545bbafe1e23b1f282d330bc4a18a14412079"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-background-enricher.php",
+            "size": 19056,
+            "hash": "b268dd3a4c37e42b31d9464fc69f19d32e95164493740555099c2acac67aad96"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-content-pipeline.php",
+            "size": 40706,
+            "hash": "93209e2f8beafe4d77b9f8aeafa888d1738c207a237dfa947cb1578f2c3b71b1"
+        },
+        {
+            "type": "file",
+            "name": "inc/admin-settings.php",
+            "size": 13882,
+            "hash": "936ebafa17534eabbee8e55272524f20794a41a1d72de0f7f53bb298a087c908"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-inbox-admin.php",
+            "size": 2621,
+            "hash": "7c18258528e3470f9a860f7a03e667a03529e485d7cb5f1e4160706250db1596"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-translate-admin.php",
+            "size": 19401,
+            "hash": "12cd9b7a74044aeab06032727602ba2836cde1bcedc3bb7373ae7230f6ba2df2"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-translate.php",
+            "size": 50895,
+            "hash": "817a816476577973b5cf8372f5b46d1f3ffccead422692ec2becfda921ab5b1c"
+        },
+        {
+            "type": "file",
+            "name": "inc/ai-content-pipeline.php.bak-2026-07-06",
+            "size": 27667,
+            "hash": "aca8bd9013d75295fc6daa822a17d96ad8bb80d67ae621ecb8633b37fdb2423e"
+        },
+        {
+            "type": "file",
+            "name": "inc/ajax-filter.php",
+            "size": 9426,
+            "hash": "b50bda7bfeca9fd1218ed3c7dee80a17650f97b694cbf35c304245abbc5f894f"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-blog-receiver.php",
+            "size": 2653,
+            "hash": "ae2b73127272d3a4deef80aa6c11419fdce54473173d15b0873f22279a93fd33"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-category-features.php",
+            "size": 12210,
+            "hash": "bfb3773ff352d2a16ed31e4473fdb0fe7101cd6a083c445a8d50da6bf9632abc"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-enricher.php",
+            "size": 12674,
+            "hash": "92f5b0456ebf6870111c0b4d96138f313b74fd611647d73c5eb722510a4ea7d6"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-group-buy.php",
+            "size": 4871,
+            "hash": "b0441ed0f9cd2de093189040b6910296550a9503472db9d1d2d29e5518fd6af6"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-hermes.php",
+            "size": 2915,
+            "hash": "705911b74b00039a4ee57a00deeec06329bcf6b1dbfb0e719e54df9a31f917e4"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-monitor.php",
+            "size": 6593,
+            "hash": "a8a3505909c60bfd773d657cc4daa674057d6268ce4a4ff45b79fffeec9c03ca"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-partner-request.php",
+            "size": 3193,
+            "hash": "da6bf7da5176e0b7fcab894d896f2c5a391a0ddaec6e85a968f86695893bd780"
+        },
+        {
+            "type": "file",
+            "name": "inc/api-software-fields.php",
+            "size": 3433,
+            "hash": "e1e3f592fd89b408ecfaa13035a0e9b26d5f7a6745b1d80e9f5899fa035c4bb7"
+        },
+        {
+            "type": "file",
+            "name": "inc/attributes.php",
+            "size": 13196,
+            "hash": "2a875979a8ed97946beaac6ca80a7f8961465a78eb3d67df2397a9627d1403ed"
+        },
+        {
+            "type": "file",
+            "name": "inc/auth.php",
+            "size": 25679,
+            "hash": "612dfeb43109e313b02f51332a5cf74dada7da0027b85f4db7ba40648707b73a"
+        },
+        {
+            "type": "file",
+            "name": "inc/block-patterns.php",
+            "size": 12535,
+            "hash": "30766462577264c41e3476efc7f3069b376d0fc13fd75177141aaf40bacde1af"
+        },
+        {
+            "type": "file",
+            "name": "inc/branding.php",
+            "size": 6059,
+            "hash": "60274e9effec0f5f0f84a33a033381e0327d90212b20aa90229acd3822d8f927"
+        },
+        {
+            "type": "file",
+            "name": "inc/cpt.php",
+            "size": 3762,
+            "hash": "7e63f9d814f2df3fb9a5e9c97cacb6a72d160076d0811031b9e0feb319e498c1"
+        },
+        {
+            "type": "file",
+            "name": "inc/db-tables.php",
+            "size": 10739,
+            "hash": "d9a1bda6b6339cd2d1e08468429ef0bfb060591e2697e18c66d0a183b034d351"
+        },
+        {
+            "type": "file",
+            "name": "inc/google-oauth.php",
+            "size": 6816,
+            "hash": "7fd727a6d8fd0ec55ae1d9f20480f2aa8617e1c4949da44cd5d5d081f2c2d4d9"
+        },
+        {
+            "type": "file",
+            "name": "inc/key-functions.php",
+            "size": 19928,
+            "hash": "fd23ba5ba320b4b74a278e2ea6b361bf1e8aefa76e750f0636d335562b9f9807"
+        },
+        {
+            "type": "file",
+            "name": "inc/lead-capture.php",
+            "size": 20085,
+            "hash": "9c03b6fa5a89918fdc01f74f7f971de38b7933f10358cc65c437436336a0c45d"
+        },
+        {
+            "type": "file",
+            "name": "inc/polylang-admin-warnings.php",
+            "size": 8445,
+            "hash": "dee04728343690650c5e15a9f401106abe5c58c0e0779596461208776add9d69"
+        },
+        {
+            "type": "file",
+            "name": "inc/prompt-templates.php",
+            "size": 29819,
+            "hash": "1ad6135460b8990ccc6d0325728f06d7270910c035cebebed5f0171028c5e56c"
+        },
+        {
+            "type": "file",
+            "name": "inc/quiz-frontend.php",
+            "size": 12220,
+            "hash": "ce2f59d2cb711c3c3a4c2a0b519e34c0eed309b1a648411c544b4f12baa4d4cb"
+        },
+        {
+            "type": "file",
+            "name": "inc/quiz-functions.php",
+            "size": 11439,
+            "hash": "787ae99632732f823425b5de5e9926c0ce835ed9254941b19e6b72f08c292a58"
+        },
+        {
+            "type": "file",
+            "name": "inc/polylang-strings.php",
+            "size": 12717,
+            "hash": "7dd19788db0655057a9f6f4eb8d0cc35dcfa72142ab85bfc4666628a7b154515"
+        },
+        {
+            "type": "file",
+            "name": "inc/schema.php",
+            "size": 19806,
+            "hash": "6fffca724772f5de171072d03df2a48fd916f14ffea75d957c59bba2b001daee"
+        },
+        {
+            "type": "file",
+            "name": "inc/send-software-info.php",
+            "size": 21649,
+            "hash": "af9a5b3cfe5a26efae5d450f3139f61313f633a15bb10f4f1068ae386666ae4e"
+        },
+        {
+            "type": "file",
+            "name": "inc/shortcodes-home.php",
+            "size": 1598,
+            "hash": "b5eed3c1506d4008ff15bf6898489b17b9e7f2dbd8b8b6927632b0eefcf4b90a"
+        },
+        {
+            "type": "file",
+            "name": "inc/quiz-rest-api.php",
+            "size": 71912,
+            "hash": "ed679a5534e94ef0292be4a86b74f990217ffb42ca81914a9ff4dfee73b9f13a"
+        },
+        {
+            "type": "file",
+            "name": "inc/shortcodes.php",
+            "size": 8843,
+            "hash": "e90163bf6c488b016e339d11d170f100c6199dfe6d51c6bafaa8f5435a64a9fa"
+        },
+        {
+            "type": "file",
+            "name": "inc/smtp.php",
+            "size": 10072,
+            "hash": "29e7c33ddef415f47e6d20195a16a887b6209793b5678f0b51391b97c250c58e"
+        },
+        {
+            "type": "file",
+            "name": "inc/template-helpers.php",
+            "size": 2457,
+            "hash": "cc1a36386a35994f24b084e95cbdc0d71dd0fa868fa829c7575ca26d21d06465"
+        },
+        {
+            "type": "file",
+            "name": "js/ai-translate.js",
+            "size": 8360,
+            "hash": "7db82ca8104be73bc9b8e55257b8d4b872dbe9020bb8758bdd080e9e63cae128"
+        },
+        {
+            "type": "file",
+            "name": "js/attrs-toggle.js",
+            "size": 1162,
+            "hash": "5f4e93100a05a9cef5448c335a2a6fec5084eb819c0bc457ca2a98354db48c51"
+        },
+        {
+            "type": "file",
+            "name": "js/auth.js",
+            "size": 5633,
+            "hash": "576e794ce475b097fba413b60869cc9694887d774ebe28499a51ba7a8c7bfdc5"
+        },
+        {
+            "type": "file",
+            "name": "js/catalog-filter.js",
+            "size": 6822,
+            "hash": "9c8cac369a98e3d14408c2dc159010366d27c6e81ca0a15e11a1772fdf7ae6c7"
+        },
+        {
+            "type": "file",
+            "name": "js/click-tracker.js",
+            "size": 1652,
+            "hash": "8fd6239552d5a20d4d1fc74af9e1c8b5951b8c46a9ca3f6b470c78dccc37dcb3"
+        },
+        {
+            "type": "file",
+            "name": "js/compare.js",
+            "size": 5014,
+            "hash": "5512a51b907e8ff962227437131770ecbc232ba38ce0cd30c66b82dcd5b349fb"
+        },
+        {
+            "type": "file",
+            "name": "js/popular-tabs.js",
+            "size": 789,
+            "hash": "73dd725e0e53f42dfb4a3471733559db5ededa9047fd326dce2a9944505a582c"
+        },
+        {
+            "type": "file",
+            "name": "js/single-software.js",
+            "size": 4524,
+            "hash": "47f96b3d326cfa95dda72902ca1b3f8a9796528b9b7648a4a54507d93c64a033"
+        },
+        {
+            "type": "file",
+            "name": "js/software-card.js",
+            "size": 2052,
+            "hash": "784aedbeeeeac2e524faa8c33cfe4eeebefe1757c06a5c44ac1813ca655a21f0"
+        },
+        {
+            "type": "file",
+            "name": "js/view-switcher.js",
+            "size": 3311,
+            "hash": "1c796d8e11752e05c34282e469efc2ec8708a2f90a6f3e1a00581a6038e3145d"
+        },
+        {
+            "type": "file",
+            "name": "languages/en_US.mo",
+            "size": 26688,
+            "hash": "a7a2d2b40b212c72104e19d7abda42477a18e311486a43f14d929646947d6b38"
+        },
+        {
+            "type": "file",
+            "name": "languages/en_US.po",
+            "size": 37652,
+            "hash": "ca905bd0f0b02fbccedec61f35cd838e8798c0b2ee81bcd37c991810ce0a9a86"
+        },
+        {
+            "type": "file",
+            "name": "languages/softmir.pot",
+            "size": 26546,
+            "hash": "61a751aebc6708cc70e32784434d5dc1c34971486e01d2b9955deb824ec01192"
+        },
+        {
+            "type": "file",
+            "name": "languages/uk.mo",
+            "size": 33336,
+            "hash": "69461640f1dfebd9f8a5259232c5214c0e79af97e91df70f26dcd62dee2c71b1"
+        },
+        {
+            "type": "file",
+            "name": "languages/uk.po",
+            "size": 44487,
+            "hash": "b8d3d3ff282888cf4d2f778efee27c9bf2952f5b4ab32030c9b3bf23a58dc123"
+        },
+        {
+            "type": "folder",
+            "name": "template-parts/builder"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/card-blog.php",
+            "size": 2582,
+            "hash": "15eaaa164d1b8de0f58387ee9caea08f0f795bcb4b0966dd0efe40073c626285"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/card-software-horizontal.php",
+            "size": 5609,
+            "hash": "3098a8630c741fe6f06117b7a16523c8cfc8bbfd32059b9792bf4657b0776f81"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/card-software-mini.php",
+            "size": 3962,
+            "hash": "f1254aca959f1c985423656928f07dfe48e68c8960b5778584f5556acfeb3b6d"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/card-software-table.php",
+            "size": 3519,
+            "hash": "dda938c1d849841aab09c148cc52f222016e0fec3477bcfc145ac12a01bb84c9"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/card-software.php",
+            "size": 6354,
+            "hash": "bd2932cf2e04c3a9c1d09b5418b89309582c64247e2a6d40b3bb77f8b3e26144"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/compare-floating-bar.php",
+            "size": 1201,
+            "hash": "0bc4162c9441fc2b0628f4516a2215afc436d34a33a3cdeed8748de09d869bba"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/group-buying-modal.php",
+            "size": 6068,
+            "hash": "1e688dfbcba86c6fe2bc6a4fc4a779f78eb35c4636c5ea8372f7faf85bd43665"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/partner-modal.php",
+            "size": 9075,
+            "hash": "172deb56fea33b0dd0303e2f18377d31383a618540b7299fa3be1110c7335fb8"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/search-bar.php",
+            "size": 5003,
+            "hash": "6b3295c57b5ded57c6f281f58c0d5a81932374318e9243996898dd35c1bf155e"
+        },
+        {
+            "type": "file",
+            "name": "tests/bootstrap.php",
+            "size": 1598,
+            "hash": "7d932598b9e3baf918cdec1308be0e60b39e2a5b76b9e30af9ef9321b303fcd0"
+        },
+        {
+            "type": "file",
+            "name": "tests/run-tests.php",
+            "size": 6603,
+            "hash": "b3315625519a80b9b397bcf86446c784347770697c163d13bc4d89da4f20869c"
+        },
+        {
+            "type": "file",
+            "name": "tools/audit-advantages-disadvantages.php",
+            "size": 7020,
+            "hash": "5e5e16eb25c8d9b300171928cadda2aec6ed9e16736b29d4eca94ab902bc2cf6"
+        },
+        {
+            "type": "file",
+            "name": "tools/clean-html-fields.php",
+            "size": 4945,
+            "hash": "78b969718377ca7d449a7c64d2623ccbd7f7eedc334404415130e34576f587fe"
+        },
+        {
+            "type": "file",
+            "name": "tools/create-legal-pages.php",
+            "size": 16756,
+            "hash": "8a20630298106aa62c011d46a23271d8b73fc7f30c4fc5a32067133ee2adfb92"
+        },
+        {
+            "type": "file",
+            "name": "tools/check-stats.php",
+            "size": 1564,
+            "hash": "579f357fb98aef11a80d3258a91cbeef0c76f40c047b926733358b141f7ba625"
+        },
+        {
+            "type": "file",
+            "name": "tools/debug-single-translate.php",
+            "size": 955,
+            "hash": "18f953d1788100380b7caa4889f2f42de9cbea64de975504115d5154f3f5c33f"
+        },
+        {
+            "type": "file",
+            "name": "tools/debug-translate.php",
+            "size": 5388,
+            "hash": "ac7e3e0c47fc161c46acffb8da126a08b5a38b92f43f111f2db125b8051df2a1"
+        },
+        {
+            "type": "file",
+            "name": "tools/disable-google-search.php",
+            "size": 1288,
+            "hash": "b4256745da560a67b038e5b870103f9bf753a8e559c4f1783a67d5da7a1afb29"
+        },
+        {
+            "type": "file",
+            "name": "tools/fix-gemini-models.php",
+            "size": 1076,
+            "hash": "8bf84dda57e4f22009c3eb40429fd938686c37ad2fa3b43a627348720947336c"
+        },
+        {
+            "type": "file",
+            "name": "tools/fix-icons-all.php",
+            "size": 1204,
+            "hash": "59ee23dfc5dabaad4ddcd9dcab66db1ebbcab7380d091cceac8955af6775f7e6"
+        },
+        {
+            "type": "file",
+            "name": "tools/fix-icons-regex.php",
+            "size": 1253,
+            "hash": "068e902506a6c2c864222f332b68945f5733bc16fe1ec151fe31977f3c3b09ea"
+        },
+        {
+            "type": "file",
+            "name": "tools/fix-icons.php",
+            "size": 1408,
+            "hash": "c6e9f6ca94e16b5c89deb21ae6f044b9fa56343631b78d036efb1b940f7063e9"
+        },
+        {
+            "type": "file",
+            "name": "tools/fix_urls.php",
+            "size": 4923,
+            "hash": "026162356cf3a00ded4acfd2ac5dbd7de98257ddcbc187ed2dcc24e66e57f3de"
+        },
+        {
+            "type": "file",
+            "name": "tools/inspect-meta.php",
+            "size": 677,
+            "hash": "e3f828e18e53fb2cc35ec786efae617ab42af8bf1280dddb12cd8ef8a34c2059"
+        },
+        {
+            "type": "file",
+            "name": "tools/get-urls.php",
+            "size": 236,
+            "hash": "e6df513139e3bbd8f57db53d128e364dd939b2010c2609754c4871b2af1d4a0e"
+        },
+        {
+            "type": "file",
+            "name": "tools/inspect.php",
+            "size": 260,
+            "hash": "7ba53a2021872237af10c3369f45934474bf6d0b9cde896c25a501e892d2ab1c"
+        },
+        {
+            "type": "file",
+            "name": "tools/link_polylang.php",
+            "size": 2492,
+            "hash": "acdc659de726d5a59f86a0a43b186930c5e4392b6df2dcff7e22bf3c0e69d786"
+        },
+        {
+            "type": "file",
+            "name": "tools/migrate-top-reasons.php",
+            "size": 2144,
+            "hash": "bd3c1f5402f06529978239118079f11d22ef2b10a7fd6d02fa954f1747530a9e"
+        },
+        {
+            "type": "file",
+            "name": "tools/migrate-old-content.php",
+            "size": 7971,
+            "hash": "1be3cf9da887686c4eb596db603d1e009e9ed7abe7ea31c65ec12d9a6928d7ef"
+        },
+        {
+            "type": "file",
+            "name": "tools/package-lock.json",
+            "size": 41110,
+            "hash": "15c463cf3698330f1a67542d284bf50b260709cdc688ade69d8265ca8e293821"
+        },
+        {
+            "type": "file",
+            "name": "tools/package.json",
+            "size": 285,
+            "hash": "7e6036ca719dc388d013af21de9372d744ab8391f2b6d4fc6c13fb499192e452"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-brands.php",
+            "size": 996,
+            "hash": "2471cfecd0af967ee88d98658556138fbbc96bf8d72e8f4b30fb5929914df381"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-quiz-batch2.php",
+            "size": 31076,
+            "hash": "a5c6aaeb3807c1c482576ee55bde94fe21783ac449e43d2a40c22679e3e1bcd7"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-quiz-batch3.php",
+            "size": 25805,
+            "hash": "c1bf388a49273eefd9c5177cbbe9171b47a2525343c1fdf128978d167ea7e49f"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-quiz-questions.php",
+            "size": 54608,
+            "hash": "9826318a5a20ced492ddb836e10e201fa371785fba7651eb072dbcaa708ab509"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-quiz-translations.php",
+            "size": 3034,
+            "hash": "72f0a28da53862254c2ed9986997f2ca2fde5320dd85f328d308a8e55dcc4fd7"
+        },
+        {
+            "type": "file",
+            "name": "tools/populate-test-cards.php",
+            "size": 1376,
+            "hash": "30b6136d5684ae84aa08de5d8a54273a6f6d526a98093666472a0da5419f58f9"
+        },
+        {
+            "type": "file",
+            "name": "tools/purge_404_cards.php",
+            "size": 1548,
+            "hash": "7582f9174924029498602dd47d396a50948d90c98cf9dd04e81c2c81c372c9de"
+        },
+        {
+            "type": "file",
+            "name": "tools/restore-google-search.php",
+            "size": 1002,
+            "hash": "438729a965f4b41b6ca6a44c32b80dae6f6794ab8c06ba6b99f31ca063fc2840"
+        },
+        {
+            "type": "file",
+            "name": "tools/screenshot-service.js",
+            "size": 1751,
+            "hash": "ad21c0d101b09278a1bdce4b6644a9bd4556c3e3c96c069d9f33aad66bc64a49"
+        },
+        {
+            "type": "file",
+            "name": "tools/setup-menus.php",
+            "size": 7324,
+            "hash": "e295139c1170bbbcffc712909dc7945debac040088cce4f4630b5f35a9fad28d"
+        },
+        {
+            "type": "file",
+            "name": "tools/sync-integrations.php",
+            "size": 3999,
+            "hash": "9cff874d6692b00a5098b18b481d4510784fb5a60133e70544d5c0add3096d7f"
+        },
+        {
+            "type": "file",
+            "name": "tools/test-debug.php",
+            "size": 1921,
+            "hash": "b5a60a2db856330ad3f0b968fba3ed0d6c4f33333bd3190ab57c3b28a1b125fb"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-attributes.php",
+            "size": 6736,
+            "hash": "b23d09aec7276b54dabb327563b4cbda48b1591034dfd86fbc5126e9c811ad1b"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-batch-cli.php",
+            "size": 2917,
+            "hash": "2e3aafb2abe06c2f20ee420744d94aeddbf0a6d03c50a9e6018bfa0141a044de"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-batch.php",
+            "size": 2879,
+            "hash": "317cc276f2364d1632cdccb40fa3ed0731de4c4e0f26cdf7c833a72c56ca93e1"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-categories.php",
+            "size": 6492,
+            "hash": "7510b32c6469887d758606fd1b08d37f0b568e50cd89ecf8936d113c1709f613"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-kf-categories.php",
+            "size": 2674,
+            "hash": "67a3638f342d20d813ce5cc640a6b00fd5f986f069c1e665edabcfebe7c89359"
+        },
+        {
+            "type": "file",
+            "name": "tools/translate-software.php",
+            "size": 2642,
+            "hash": "e7343319578d53e9b1ba13854c7b4b9c4b5d3001d4aaaad1a559e2ac75b92e37"
+        },
+        {
+            "type": "file",
+            "name": "assets/css/quiz.css",
+            "size": 9713,
+            "hash": "8d8ad752861f80890c6b341248a4581aa42092d6b77062863dda45731d0d577c"
+        },
+        {
+            "type": "file",
+            "name": "assets/img/hero-infographic-preview.html",
+            "size": 14725,
+            "hash": "e21ba404aea696a2f42f1e594404a1f0339b0f6ffd8c2213f8ec554f8e42a345"
+        },
+        {
+            "type": "file",
+            "name": "assets/js/quiz.js",
+            "size": 29463,
+            "hash": "2acfc5d7a72cdf1fcb30c6dc05fc58384b86be0ba4feda5181f199179feb5b09"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/advantages.php",
+            "size": 2187,
+            "hash": "9b7df83e0e27600d3fcba985db0dc42c633e9ef9ed9db9c5c2e0750f04b1407a"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/blog.php",
+            "size": 1917,
+            "hash": "35ad9d853c98113b55005e633b223715a80901ca7ea1dd1ffd5c45cb9f4a8231"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/categories.php",
+            "size": 5541,
+            "hash": "a15b5a915ef94bc4e19f906e7007e8c4bc1f4005931721758d99a6548c9c5074"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/cta.php",
+            "size": 3847,
+            "hash": "ea213a6f62e01b38441d360585b25cdf2a9ee8847d12a4b4565bb2b88702a788"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/group_buying.php",
+            "size": 2315,
+            "hash": "53b7c46a8f4cdf91468a707a193a89154cc72f15f89d618d729df28ad7eddf78"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/hero_backup_old.php",
+            "size": 1383,
+            "hash": "a654ab06768c61a52501f59483217ac0204d092f1a2cf3f5e4020de952d1278f"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/new_software.php",
+            "size": 1785,
+            "hash": "5115367b7e19b9af44f82b34c734c80fb6baba560580d052a6e0441648ebb5a5"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/partnership.php",
+            "size": 2947,
+            "hash": "9c3ace6ef4b0998bc8587024c0bdaafbe90b7f8f993cc6ccf829c066dea647a6"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/popular_products.php",
+            "size": 6654,
+            "hash": "ec28ca73eed83e1269e6c1060a82537fb2b3a67f2b3e795f7442fe03cd717adf"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/testimonials.php",
+            "size": 2861,
+            "hash": "8df7d84d3823e3d67ed04cf469ad755ba882c100d92493693b8a3fb833c758f0"
+        },
+        {
+            "type": "file",
+            "name": "template-parts/builder/hero.php",
+            "size": 1432,
+            "hash": "18c914099ff3dd16253e953dfccf49603234381845a456c06bf39fda22ac46b8"
+        }
+    ]
+}

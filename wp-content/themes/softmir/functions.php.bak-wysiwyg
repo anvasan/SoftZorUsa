@@ -1,0 +1,1146 @@
+<?php
+/**
+ * SoftMir Theme Functions
+ */
+
+// ========== Content Width ==========
+if (!isset($content_width)) {
+    $content_width = 1280;
+}
+
+// ========== Theme Setup ==========
+function softmir_setup()
+{
+    load_theme_textdomain('softmir', get_template_directory() . '/languages');
+
+    add_theme_support('title-tag');
+    add_theme_support('post-thumbnails');
+    add_theme_support('html5', ['search-form', 'comment-form', 'comment-list', 'gallery', 'caption']);
+    add_theme_support('custom-logo', ['height' => 60, 'width' => 250, 'flex-height' => true, 'flex-width' => true]);
+    add_theme_support('align-wide');
+
+    register_nav_menus([
+        'primary' => __('Верхнее меню (Header)', 'softmir'),
+        'footer' => __('Нижнее меню (Footer)', 'softmir'),
+    ]);
+}
+add_action('after_setup_theme', 'softmir_setup');
+
+// ========== Enqueue Styles & Scripts ==========
+function softmir_enqueue()
+{
+    wp_enqueue_style('google-fonts', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', [], null);
+    wp_enqueue_style('softmir-style', get_stylesheet_uri(), ['google-fonts'], '1.3.0');
+
+    if (is_front_page()) {
+        wp_enqueue_script('popular-tabs', get_template_directory_uri() . '/js/popular-tabs.js', [], '1.0.0', true);
+    }
+    if (is_post_type_archive('software')) {
+        wp_enqueue_script('view-switcher', get_template_directory_uri() . '/js/view-switcher.js', [], '1.0.0', true);
+        wp_enqueue_script('catalog-filter', get_template_directory_uri() . '/js/catalog-filter.js', [], '1.0.0', true);
+        wp_localize_script('catalog-filter', 'softmirCatalog', [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('softmir_catalog_filter'),
+            'archiveUrl' => get_post_type_archive_link('software'),
+        ]);
+    }
+    if (is_singular('software')) {
+        wp_enqueue_script('softmir-single', get_template_directory_uri() . '/js/single-software.js', [], '1.0.0', true);
+        wp_localize_script('softmir-single', 'softmirSingleL10n', [
+            'showMore' => softmir_quiz_t('sw_show_more', 'Показать больше...'),
+            'showLess' => softmir_quiz_t('sw_show_less', 'Показать меньше...'),
+            'hide' => softmir_quiz_t('sw_hide', 'Скрыть'),
+        ]);
+    }
+
+    // Auth JS (global)
+    wp_enqueue_script('softmir-auth', get_template_directory_uri() . '/js/auth.js', [], '1.0.0', true);
+
+    // Compare JS (global)
+    wp_enqueue_script('softmir-compare', get_template_directory_uri() . '/js/compare.js', ['jquery'], '1.0.0', true);
+    wp_localize_script('softmir-compare', 'softmirCompare', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('softmir_compare'),
+    ]);
+
+    // Click Tracker JS (global)
+    wp_enqueue_script('softmir-click-tracker', get_template_directory_uri() . '/js/click-tracker.js', [], '1.0.0', true);
+    wp_localize_script('softmir-click-tracker', 'softmirClickTracker', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('softmir_click_track'),
+    ]);
+
+    // Attrs Toggle JS (global — for "Show more attributes" on cards)
+    wp_enqueue_script('softmir-attrs-toggle', get_template_directory_uri() . '/js/attrs-toggle.js', [], '1.0.0', true);
+}
+add_action('wp_enqueue_scripts', 'softmir_enqueue');
+
+// ========== Add defer to non-critical scripts ==========
+function softmir_defer_scripts($tag, $handle, $src)
+{
+    // Don't defer jQuery or inline scripts
+    $no_defer = ['jquery', 'jquery-core', 'jquery-migrate', 'wp-embed'];
+    if (in_array($handle, $no_defer)) {
+        return $tag;
+    }
+    // Only defer theme scripts
+    $defer_handles = [
+        'popular-tabs',
+        'view-switcher',
+        'catalog-filter',
+        'softmir-single',
+        'softmir-auth',
+        'softmir-compare',
+        'softmir-click-tracker',
+        'softmir-attrs-toggle'
+    ];
+    if (in_array($handle, $defer_handles) && strpos($tag, 'defer') === false) {
+        $tag = str_replace(' src=', ' defer src=', $tag);
+    }
+    return $tag;
+}
+add_filter('script_loader_tag', 'softmir_defer_scripts', 10, 3);
+
+// ========== Polylang: Fallback to default language for software ==========
+function softmir_pll_fallback_query($query)
+{
+    if (is_admin() || !function_exists('pll_current_language'))
+        return;
+    if (!$query->is_main_query())
+        return;
+
+    // Only for software/integrator archives and taxonomy pages
+    if (
+        $query->is_post_type_archive('software') ||
+        $query->is_post_type_archive('integrator') ||
+        $query->is_tax('software_category')
+    ) {
+        $cur_lang = pll_current_language();
+        $def_lang = pll_default_language();
+
+        // If not default language, check if translations exist
+        if ($cur_lang && $cur_lang !== $def_lang) {
+            $test = new WP_Query([
+                'post_type' => 'software',
+                'posts_per_page' => 1,
+                'lang' => $cur_lang,
+                'fields' => 'ids',
+                'no_found_rows' => true,
+            ]);
+            // No translated posts → fallback to all languages
+            if ($test->post_count === 0) {
+                $query->set('lang', '');
+            }
+        }
+    }
+}
+add_action('pre_get_posts', 'softmir_pll_fallback_query');
+
+/**
+ * Get terms with Polylang fallback: if no terms in current language, return all.
+ */
+function softmir_pll_get_terms($args = [])
+{
+    // First try current language (Polylang filters automatically)
+    $terms = get_terms($args);
+    if (!empty($terms) && !is_wp_error($terms)) {
+        return $terms;
+    }
+    // Fallback: get terms from all languages
+    $args['lang'] = '';
+    return get_terms($args);
+}
+
+// ========== Register CPT: Software ==========
+function softmir_cpt_software()
+{
+    register_post_type('software', [
+        'labels' => [
+            'name' => __('Каталог ПО', 'softmir'),
+            'singular_name' => __('Программа', 'softmir'),
+            'add_new' => __('Добавить ПО', 'softmir'),
+            'add_new_item' => __('Добавить новое ПО', 'softmir'),
+            'edit_item' => __('Редактировать ПО', 'softmir'),
+            'all_items' => __('Все программы', 'softmir'),
+            'search_items' => __('Поиск ПО', 'softmir'),
+            'not_found' => __('Не найдено', 'softmir'),
+            'menu_name' => __('Каталог ПО', 'softmir'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'rewrite' => ['slug' => 'software', 'with_front' => false],
+        'menu_icon' => 'dashicons-grid-view',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'show_in_rest' => true,
+    ]);
+}
+add_action('init', 'softmir_cpt_software');
+
+// ========== Register CPT: Integrator ==========
+function softmir_cpt_integrator()
+{
+    register_post_type('integrator', [
+        'labels' => [
+            'name' => __('Интеграторы', 'softmir'),
+            'singular_name' => __('Интегратор', 'softmir'),
+            'add_new' => __('Добавить интегратора', 'softmir'),
+            'add_new_item' => __('Добавить нового интегратора', 'softmir'),
+            'edit_item' => __('Редактировать интегратора', 'softmir'),
+            'all_items' => __('Все интеграторы', 'softmir'),
+            'menu_name' => __('Интеграторы', 'softmir'),
+        ],
+        'public' => true,
+        'has_archive' => true,
+        'rewrite' => ['slug' => 'integrator', 'with_front' => false],
+        'menu_icon' => 'dashicons-groups',
+        'supports' => ['title', 'editor', 'thumbnail', 'excerpt'],
+        'show_in_rest' => true,
+    ]);
+}
+add_action('init', 'softmir_cpt_integrator');
+
+// ========== Register Taxonomy: Software Category ==========
+function softmir_taxonomy_software_category()
+{
+    register_taxonomy('software_category', 'software', [
+        'labels' => [
+            'name' => __('Категории ПО', 'softmir'),
+            'singular_name' => __('Категория ПО', 'softmir'),
+            'search_items' => __('Поиск категорий', 'softmir'),
+            'all_items' => __('Все категории', 'softmir'),
+            'parent_item' => __('Родительская категория', 'softmir'),
+            'edit_item' => __('Редактировать категорию', 'softmir'),
+            'add_new_item' => __('Добавить категорию', 'softmir'),
+            'menu_name' => __('Категории', 'softmir'),
+        ],
+        'hierarchical' => true,
+        'public' => true,
+        'rewrite' => ['slug' => 'software-category'],
+        'show_in_rest' => true,
+        'show_admin_column' => true,
+    ]);
+}
+add_action('init', 'softmir_taxonomy_software_category');
+
+// ========== Move Category Meta Box to Main Column ==========
+function softmir_move_category_metabox()
+{
+    remove_meta_box('software_categorydiv', 'software', 'side');
+    add_meta_box('software_categorydiv', __('Категории ПО', 'softmir'), 'post_categories_meta_box', 'software', 'normal', 'high', ['taxonomy' => 'software_category']);
+}
+add_action('add_meta_boxes', 'softmir_move_category_metabox');
+
+// ========== ACF Field Groups ==========
+function softmir_acf_fields()
+{
+    if (!function_exists('acf_add_local_field_group'))
+        return;
+
+    // Software Top Fields (Logo, Primary Category)
+    acf_add_local_field_group([
+        'key' => 'group_software_top',
+        'title' => 'Основная информация (Логотип и Категория)',
+        'fields' => [
+            // Logo
+            ['key' => 'field_sw_logo', 'label' => 'Логотип компании', 'name' => 'company_logo', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'medium', 'instructions' => 'Рекомендуемый размер 300x150'],
+            // Primary Category
+            ['key' => 'field_sw_primary_cat', 'label' => 'Основная категория', 'name' => 'primary_category', 'type' => 'taxonomy', 'taxonomy' => 'software_category', 'field_type' => 'select', 'allow_null' => 1, 'add_term' => 0, 'save_terms' => 0, 'load_terms' => 0, 'return_format' => 'id', 'multiple' => 0, 'instructions' => 'Выберите основную категорию для хлебных крошек и подтягивания ключевых функций.'],
+        ],
+        'location' => [
+            [['param' => 'post_type', 'operator' => '==', 'value' => 'software']],
+        ],
+        'position' => 'normal',
+        'style' => 'default',
+        'menu_order' => 0,
+    ]);
+
+    // Software Main Fields
+    acf_add_local_field_group([
+        'key' => 'group_software',
+        'title' => 'Детали продукта',
+        'fields' => [
+            // Short Description
+            ['key' => 'field_sw_short_desc', 'label' => 'Краткое описание', 'name' => 'short_description', 'type' => 'textarea', 'rows' => 3],
+            // Website
+            ['key' => 'field_sw_website', 'label' => 'Сайт', 'name' => 'website_url', 'type' => 'url'],
+            // Video
+            ['key' => 'field_sw_video', 'label' => 'Видео (YouTube)', 'name' => 'video_url', 'type' => 'url'],
+            // Screenshots (Individual fields for Free ACF) — compact 4-in-a-row layout
+            ['key' => 'field_sw_screen_1', 'label' => 'Скриншот 1', 'name' => 'screenshot_1', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
+            ['key' => 'field_sw_screen_2', 'label' => 'Скриншот 2', 'name' => 'screenshot_2', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
+            ['key' => 'field_sw_screen_3', 'label' => 'Скриншот 3', 'name' => 'screenshot_3', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
+            ['key' => 'field_sw_screen_4', 'label' => 'Скриншот 4', 'name' => 'screenshot_4', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
+            // Pricing (WYSIWYG)
+            ['key' => 'field_sw_pricing', 'label' => 'Тарифы', 'name' => 'pricing', 'type' => 'wysiwyg', 'tabs' => 'all', 'toolbar' => 'full', 'media_upload' => 0, 'instructions' => 'Используйте таблицу или список для описания тарифов. Например: Название тарифа — Цена — Примечание.'],
+            // Key Features (WYSIWYG)
+            ['key' => 'field_sw_features', 'label' => 'Ключевые особенности', 'name' => 'key_features', 'type' => 'wysiwyg', 'tabs' => 'all', 'toolbar' => 'full', 'media_upload' => 0, 'instructions' => 'Перечислите ключевые особенности продукта.'],
+            // Advantages (WYSIWYG)
+            ['key' => 'field_sw_advantages', 'label' => 'Преимущества', 'name' => 'advantages', 'type' => 'wysiwyg', 'tabs' => 'all', 'toolbar' => 'full', 'media_upload' => 0, 'instructions' => 'Перечислите преимущества продукта.'],
+            // Business Areas (WYSIWYG)
+            ['key' => 'field_sw_areas', 'label' => 'Отрасли', 'name' => 'business_areas', 'type' => 'wysiwyg', 'tabs' => 'all', 'toolbar' => 'full', 'media_upload' => 0, 'instructions' => 'Перечислите отрасли, для которых подходит продукт.'],
+            // Pricing Summary
+            ['key' => 'field_sw_price_summary', 'label' => 'Цена (отображение в карточке)', 'name' => 'price_summary', 'type' => 'text', 'instructions' => 'Например: От $19/мес'],
+            // Target Markets
+            ['key' => 'field_sw_markets', 'label' => 'Целевые рынки', 'name' => 'target_markets', 'type' => 'checkbox', 'choices' => ['Россия' => 'Россия', 'СНГ' => 'СНГ', 'Европа' => 'Европа', 'США' => 'США']],
+            // Flags
+            ['key' => 'field_sw_featured', 'label' => 'Рекомендуемое (TOP)', 'name' => 'is_featured', 'type' => 'true_false', 'ui' => 1],
+            ['key' => 'field_sw_pinned', 'label' => 'Закрепить на главной', 'name' => 'is_pinned', 'type' => 'true_false', 'ui' => 1],
+        ],
+        'location' => [
+            [['param' => 'post_type', 'operator' => '==', 'value' => 'software']],
+        ],
+        'position' => 'normal',
+        'style' => 'default',
+        'menu_order' => 10,
+    ]);
+
+    // Automatically enforce meta box order for software
+    add_filter('get_user_option_meta-box-order_software', function ($order) {
+        $required_normal_order = 'acf-group_software_top,software_categorydiv,softmir_software_key_functions,softmir_sw_attributes,acf-group_software';
+
+        if (empty($order) || !is_array($order)) {
+            $order = [
+                'normal' => $required_normal_order,
+                'side' => 'submitdiv,postimagediv,slugdiv,postcustom',
+                'advanced' => '',
+            ];
+        } else {
+            $order['normal'] = $required_normal_order;
+        }
+        return $order;
+    });
+
+    // Integrator Fields
+    acf_add_local_field_group([
+        'key' => 'group_integrator',
+        'title' => 'Данные интегратора',
+        'fields' => [
+            ['key' => 'field_int_logo', 'label' => 'Логотип', 'name' => 'integrator_logo', 'type' => 'image', 'return_format' => 'url'],
+            ['key' => 'field_int_website', 'label' => 'Сайт', 'name' => 'integrator_website', 'type' => 'url'],
+            ['key' => 'field_int_short_desc', 'label' => 'Краткое описание', 'name' => 'integrator_short_desc', 'type' => 'textarea', 'rows' => 3],
+        ],
+        'location' => [
+            [['param' => 'post_type', 'operator' => '==', 'value' => 'integrator']],
+        ],
+    ]);
+
+
+}
+add_action('acf/init', 'softmir_acf_fields');
+
+// ========== Include Attribute Helpers ==========
+// require_once get_template_directory() . '/inc/acf-home.php';
+require_once get_template_directory() . '/inc/shortcodes.php';
+require_once get_template_directory() . '/inc/shortcodes-home.php';
+require_once get_template_directory() . '/inc/acf-home-options.php';
+require_once get_template_directory() . '/inc/acf-software.php';
+require_once get_template_directory() . '/inc/block-patterns.php';
+
+require_once get_template_directory() . '/inc/attributes.php';
+require_once get_template_directory() . '/inc/schema.php';
+require_once get_template_directory() . '/inc/ajax-filter.php';
+require_once get_template_directory() . '/inc/key-functions.php';
+
+// ========== AI Translation ==========
+require_once get_template_directory() . '/inc/ai-translate.php';
+require_once get_template_directory() . '/inc/ai-translate-admin.php';
+
+// ========== Admin Settings (Gemini API Key) ==========
+require_once get_template_directory() . '/inc/admin-settings.php';
+
+// ========== Auth System ==========
+require_once get_template_directory() . '/inc/auth.php';
+require_once get_template_directory() . '/inc/smtp.php';
+require_once get_template_directory() . '/inc/google-oauth.php';
+
+// ========== Quiz System ==========
+require_once get_template_directory() . '/inc/polylang-strings.php';
+require_once get_template_directory() . '/inc/quiz-functions.php';
+require_once get_template_directory() . '/inc/db-tables.php';
+require_once get_template_directory() . '/inc/quiz-frontend.php';
+require_once get_template_directory() . '/inc/quiz-rest-api.php';
+
+// ========== Register CPT: sw_attribute ==========
+function softmir_cpt_sw_attribute()
+{
+    register_post_type('sw_attribute', [
+        'labels' => [
+            'name' => __('Атрибуты ПО', 'softmir'),
+            'singular_name' => __('Атрибут', 'softmir'),
+            'add_new' => __('Добавить атрибут', 'softmir'),
+            'add_new_item' => __('Добавить новый атрибут', 'softmir'),
+            'edit_item' => __('Редактировать атрибут', 'softmir'),
+            'all_items' => __('Атрибуты', 'softmir'),
+            'search_items' => __('Поиск атрибутов', 'softmir'),
+            'not_found' => __('Атрибуты не найдены', 'softmir'),
+            'menu_name' => __('Атрибуты ПО', 'softmir'),
+        ],
+        'public' => false,
+        'show_ui' => true,
+        'show_in_menu' => 'edit.php?post_type=software',
+        'menu_icon' => 'dashicons-tag',
+        'supports' => ['title'],
+        'has_archive' => false,
+        'rewrite' => false,
+    ]);
+}
+add_action('init', 'softmir_cpt_sw_attribute');
+
+// ========== Register sw_attribute in Polylang ==========
+function softmir_pll_post_types($post_types)
+{
+    $post_types['sw_attribute'] = 'sw_attribute';
+    return $post_types;
+}
+add_filter('pll_get_post_types', 'softmir_pll_post_types');
+
+// ========== Admin Columns: sw_attribute ==========
+function softmir_sw_attribute_columns($columns)
+{
+    $new = [];
+    foreach ($columns as $key => $label) {
+        $new[$key] = $label;
+        if ($key === 'title') {
+            $new['attr_type'] = 'Тип';
+            $new['attr_card_pos'] = 'Карточка';
+            $new['attr_page_pos'] = 'Страница';
+            $new['attr_categories'] = 'Привязка к категориям';
+        }
+    }
+    return $new;
+}
+add_filter('manage_sw_attribute_posts_columns', 'softmir_sw_attribute_columns');
+
+function softmir_sw_attribute_column_content($column, $post_id)
+{
+    $type_labels = [
+        'text' => 'Текст',
+        'number' => 'Число',
+        'url' => 'Ссылка',
+        'select' => 'Список',
+        'checkbox' => 'Чекбоксы',
+    ];
+    $card_labels = ['none' => '—', 'middle' => 'Средняя', 'footer' => 'Подвал'];
+    $page_labels = ['none' => '—', 'middle' => 'Основная', 'sidebar' => 'Сайдбар'];
+
+    switch ($column) {
+        case 'attr_type':
+            $type = get_post_meta($post_id, '_attr_type', true) ?: 'text';
+            echo esc_html($type_labels[$type] ?? $type);
+            break;
+
+        case 'attr_card_pos':
+            $pos = get_post_meta($post_id, '_attr_card_position', true) ?: 'none';
+            echo esc_html($card_labels[$pos] ?? $pos);
+            break;
+
+        case 'attr_page_pos':
+            $pos = get_post_meta($post_id, '_attr_page_position', true) ?: 'none';
+            echo esc_html($page_labels[$pos] ?? $pos);
+            break;
+
+        case 'attr_categories':
+            $cats = get_post_meta($post_id, '_attr_categories', true);
+            if (empty($cats) || !is_array($cats)) {
+                echo '<em style="color:#888;">Все категории</em>';
+            } else {
+                $names = [];
+                foreach ($cats as $term_id) {
+                    $term = get_term($term_id, 'software_category');
+                    if ($term && !is_wp_error($term)) {
+                        $names[] = esc_html($term->name);
+                    }
+                }
+                echo !empty($names) ? implode(', ', $names) : '<em style="color:#888;">Все категории</em>';
+            }
+            break;
+    }
+}
+add_action('manage_sw_attribute_posts_custom_column', 'softmir_sw_attribute_column_content', 10, 2);
+
+// ========== Meta Box: Attribute Settings ==========
+function softmir_attr_settings_meta_box()
+{
+    add_meta_box(
+        'softmir_attr_settings',
+        'Настройки атрибута',
+        'softmir_attr_settings_render',
+        'sw_attribute',
+        'normal',
+        'high'
+    );
+}
+add_action('add_meta_boxes', 'softmir_attr_settings_meta_box');
+
+function softmir_attr_settings_render($post)
+{
+    wp_nonce_field('softmir_attr_settings', 'softmir_attr_nonce');
+
+    $type = get_post_meta($post->ID, '_attr_type', true) ?: 'text';
+    $icon = get_post_meta($post->ID, '_attr_icon', true) ?: '';
+    $filterable = get_post_meta($post->ID, '_attr_filterable', true);
+    $card_pos = get_post_meta($post->ID, '_attr_card_position', true) ?: 'none';
+    $page_pos = get_post_meta($post->ID, '_attr_page_position', true) ?: 'none';
+    $options = get_post_meta($post->ID, '_attr_options', true) ?: '';
+    $multiple = get_post_meta($post->ID, '_attr_multiple', true);
+    $bound_cats = get_post_meta($post->ID, '_attr_categories', true) ?: [];
+
+    $types = [
+        'text' => 'Текст',
+        'number' => 'Число',
+        'url' => 'Ссылка (URL)',
+        'select' => 'Выпадающий список',
+        'checkbox' => 'Чекбоксы',
+    ];
+    $card_positions = ['none' => 'Не показывать', 'middle' => 'Средняя секция', 'footer' => 'Подвал'];
+    $page_positions = ['none' => 'Не показывать', 'middle' => 'Основная колонка', 'sidebar' => 'Сайдбар'];
+
+    echo '<table class="form-table">';
+
+    // Type
+    echo '<tr><th><label>Тип данных</label></th><td><select name="_attr_type" style="min-width:200px">';
+    foreach ($types as $k => $v) {
+        echo '<option value="' . esc_attr($k) . '"' . selected($type, $k, false) . '>' . esc_html($v) . '</option>';
+    }
+    echo '</select></td></tr>';
+
+    // Icon
+    echo '<tr><th><label>Иконка</label></th><td>';
+    echo '<input type="text" name="_attr_icon" value="' . esc_attr($icon) . '" placeholder="Emoji или CSS-класс, напр. 🌐" style="min-width:200px">';
+    echo '<p class="description">Emoji (🌐 💻 📊) или CSS-класс иконки</p>';
+    echo '</td></tr>';
+
+    // Filterable
+    echo '<tr><th><label>Участвует в фильтрации</label></th><td>';
+    echo '<label><input type="checkbox" name="_attr_filterable" value="1"' . checked($filterable, '1', false) . '> Показывать в фильтрах каталога</label>';
+    echo '</td></tr>';
+
+    // Card position
+    echo '<tr><th><label>Расположение в карточке</label></th><td><select name="_attr_card_position" style="min-width:200px">';
+    foreach ($card_positions as $k => $v) {
+        echo '<option value="' . esc_attr($k) . '"' . selected($card_pos, $k, false) . '>' . esc_html($v) . '</option>';
+    }
+    echo '</select></td></tr>';
+
+    // Page position
+    echo '<tr><th><label>Расположение на странице</label></th><td><select name="_attr_page_position" style="min-width:200px">';
+    foreach ($page_positions as $k => $v) {
+        echo '<option value="' . esc_attr($k) . '"' . selected($page_pos, $k, false) . '>' . esc_html($v) . '</option>';
+    }
+    echo '</select></td></tr>';
+
+    // Options (for select/checkbox)
+    echo '<tr><th><label>Варианты</label></th><td>';
+    echo '<textarea name="_attr_options" rows="3" style="width:100%;max-width:400px" placeholder="Вариант 1, Вариант 2, Вариант 3">' . esc_textarea($options) . '</textarea>';
+    echo '<p class="description">Через запятую. Только для типов «Выпадающий список» и «Чекбоксы»</p>';
+    echo '</td></tr>';
+
+    // Multiple
+    echo '<tr><th><label>Множественный выбор</label></th><td>';
+    echo '<label><input type="checkbox" name="_attr_multiple" value="1"' . checked($multiple, '1', false) . '> Разрешить выбор нескольких значений</label>';
+    echo '</td></tr>';
+
+    // Category binding
+    $all_cats = softmir_pll_get_terms(['taxonomy' => 'software_category', 'hide_empty' => false]);
+    if ($all_cats && !is_wp_error($all_cats)) {
+        echo '<tr><th><label>Привязка к категориям</label></th><td>';
+        echo '<fieldset style="max-height:200px;overflow-y:auto;border:1px solid #ddd;padding:8px;border-radius:4px;">';
+        foreach ($all_cats as $cat) {
+            $chk = is_array($bound_cats) && in_array($cat->term_id, $bound_cats) ? ' checked' : '';
+            echo '<label style="display:block;margin-bottom:4px;"><input type="checkbox" name="_attr_categories[]" value="' . esc_attr($cat->term_id) . '"' . $chk . '> ' . esc_html($cat->name) . '</label>';
+        }
+        echo '</fieldset>';
+        echo '<p class="description">Если ничего не выбрано — атрибут для всех категорий</p>';
+        echo '</td></tr>';
+    }
+
+    echo '</table>';
+}
+
+// ========== Save Attribute Settings ==========
+function softmir_attr_settings_save($post_id)
+{
+    if (!isset($_POST['softmir_attr_nonce']) || !wp_verify_nonce($_POST['softmir_attr_nonce'], 'softmir_attr_settings'))
+        return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (get_post_type($post_id) !== 'sw_attribute')
+        return;
+
+    $fields = ['_attr_type', '_attr_icon', '_attr_card_position', '_attr_page_position', '_attr_options'];
+    foreach ($fields as $f) {
+        if (isset($_POST[$f])) {
+            update_post_meta($post_id, $f, sanitize_text_field($_POST[$f]));
+        }
+    }
+    // Checkboxes
+    update_post_meta($post_id, '_attr_filterable', isset($_POST['_attr_filterable']) ? '1' : '0');
+    update_post_meta($post_id, '_attr_multiple', isset($_POST['_attr_multiple']) ? '1' : '0');
+
+    // Categories (array of term IDs)
+    $cats = isset($_POST['_attr_categories']) ? array_map('intval', $_POST['_attr_categories']) : [];
+    update_post_meta($post_id, '_attr_categories', $cats);
+}
+add_action('save_post', 'softmir_attr_settings_save');
+
+// ========== Meta Box: Dynamic Attributes on Software Edit ==========
+function softmir_software_attrs_meta_box()
+{
+    add_meta_box(
+        'softmir_sw_attributes',
+        '📋 Атрибуты ПО',
+        'softmir_software_attrs_render',
+        'software',
+        'normal',
+        'default'
+    );
+}
+add_action('add_meta_boxes', 'softmir_software_attrs_meta_box');
+
+function softmir_software_attrs_render($post)
+{
+    wp_nonce_field('softmir_sw_attrs', 'softmir_sw_attrs_nonce');
+
+    $attrs = softmir_get_attributes();
+    if (empty($attrs)) {
+        echo '<p style="color:#888;">Атрибуты ещё не созданы. <a href="' . admin_url('edit.php?post_type=sw_attribute') . '">Создайте атрибуты</a></p>';
+        return;
+    }
+
+    echo '<table class="form-table">';
+    foreach ($attrs as $attr) {
+        if (!softmir_attr_applies_to_software($attr->ID, $post->ID))
+            continue;
+
+        $meta = softmir_get_attr_meta($attr->ID);
+        $value = softmir_get_software_attr_value($post->ID, $attr->ID);
+        $field_name = '_sw_attr_' . $attr->ID;
+        $icon = $meta['icon'] ? $meta['icon'] . ' ' : '';
+
+        echo '<tr><th><label>' . esc_html($icon . $attr->post_title) . '</label></th><td>';
+
+        switch ($meta['type']) {
+            case 'checkbox':
+                $options = softmir_parse_options($meta['options']);
+                if (!empty($options)) {
+                    $current = is_array($value) ? $value : [];
+                    foreach ($options as $opt) {
+                        $chk = in_array($opt, $current) ? ' checked' : '';
+                        echo '<label style="display:inline-block;margin-right:12px;margin-bottom:4px;"><input type="checkbox" name="' . esc_attr($field_name) . '[]" value="' . esc_attr($opt) . '"' . $chk . '> ' . esc_html($opt) . '</label>';
+                    }
+                } else {
+                    echo '<label><input type="checkbox" name="' . esc_attr($field_name) . '" value="1"' . checked($value, '1', false) . '> Да</label>';
+                }
+                break;
+
+            case 'select':
+                $options = softmir_parse_options($meta['options']);
+                if ($meta['multiple']) {
+                    $current = is_array($value) ? $value : [];
+                    echo '<select name="' . esc_attr($field_name) . '[]" multiple style="min-width:250px;min-height:80px">';
+                    foreach ($options as $opt) {
+                        $sel = in_array($opt, $current) ? ' selected' : '';
+                        echo '<option value="' . esc_attr($opt) . '"' . $sel . '>' . esc_html($opt) . '</option>';
+                    }
+                    echo '</select>';
+                    echo '<p class="description">Зажмите Ctrl для множественного выбора</p>';
+                } else {
+                    echo '<select name="' . esc_attr($field_name) . '" style="min-width:250px">';
+                    echo '<option value="">— Выберите —</option>';
+                    foreach ($options as $opt) {
+                        echo '<option value="' . esc_attr($opt) . '"' . selected($value, $opt, false) . '>' . esc_html($opt) . '</option>';
+                    }
+                    echo '</select>';
+                }
+                break;
+
+            case 'url':
+                echo '<input type="url" name="' . esc_attr($field_name) . '" value="' . esc_attr($value) . '" style="width:100%;max-width:400px" placeholder="https://">';
+                break;
+
+            case 'number':
+                echo '<input type="number" name="' . esc_attr($field_name) . '" value="' . esc_attr($value) . '" style="min-width:150px">';
+                break;
+
+            case 'text':
+            default:
+                echo '<input type="text" name="' . esc_attr($field_name) . '" value="' . esc_attr($value) . '" style="width:100%;max-width:400px">';
+                break;
+        }
+
+        echo '</td></tr>';
+    }
+    echo '</table>';
+}
+
+// ========== Save Software Attribute Values ==========
+function softmir_software_attrs_save($post_id)
+{
+    if (!isset($_POST['softmir_sw_attrs_nonce']) || !wp_verify_nonce($_POST['softmir_sw_attrs_nonce'], 'softmir_sw_attrs'))
+        return;
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)
+        return;
+    if (get_post_type($post_id) !== 'software')
+        return;
+
+    $attrs = softmir_get_attributes();
+    foreach ($attrs as $attr) {
+        $field_name = '_sw_attr_' . $attr->ID;
+        $meta = softmir_get_attr_meta($attr->ID);
+
+        if (isset($_POST[$field_name])) {
+            $val = $_POST[$field_name];
+            if (is_array($val)) {
+                $val = array_map('sanitize_text_field', $val);
+            } else {
+                $val = sanitize_text_field($val);
+            }
+            update_post_meta($post_id, $field_name, $val);
+        } else {
+            // Checkbox unchecked or nothing selected
+            if ($meta['type'] === 'checkbox') {
+                $options = softmir_parse_options($meta['options']);
+                if (!empty($options)) {
+                    update_post_meta($post_id, $field_name, []);
+                } else {
+                    update_post_meta($post_id, $field_name, '0');
+                }
+            }
+        }
+    }
+}
+add_action('save_post', 'softmir_software_attrs_save');
+
+// ========== Helper: Stars Rating HTML ==========
+function softmir_stars($rating = 0, $max = 5)
+{
+    $output = '<span class="stars">';
+    for ($i = 1; $i <= $max; $i++) {
+        $output .= $i <= round($rating) ? '★' : '<span class="empty">★</span>';
+    }
+    $output .= '</span>';
+    return $output;
+}
+
+// ========== Helper: Truncate text ==========
+function softmir_truncate($text, $length = 120)
+{
+    if (strlen($text) <= $length)
+        return $text;
+    return rtrim(substr($text, 0, $length)) . '...';
+}
+
+// ========== Post View Counter ==========
+function softmir_track_views()
+{
+    if (!is_singular('software'))
+        return;
+    if (is_admin())
+        return;
+
+    // Don't count bots
+    if (isset($_SERVER['HTTP_USER_AGENT']) && preg_match('/bot|crawl|spider|slurp|facebookexternalhit/i', $_SERVER['HTTP_USER_AGENT']))
+        return;
+
+    $post_id = get_the_ID();
+    $count = (int) get_post_meta($post_id, 'softmir_views', true);
+    update_post_meta($post_id, 'softmir_views', $count + 1);
+}
+add_action('wp_head', 'softmir_track_views');
+
+function softmir_get_views($post_id = null)
+{
+    if (!$post_id)
+        $post_id = get_the_ID();
+    return (int) get_post_meta($post_id, 'softmir_views', true);
+}
+
+// ========== Click Counter (AJAX) ==========
+function softmir_get_clicks($post_id = null)
+{
+    if (!$post_id)
+        $post_id = get_the_ID();
+    return (int) get_post_meta($post_id, 'softmir_clicks', true);
+}
+
+function softmir_ajax_track_click()
+{
+    check_ajax_referer('softmir_click_track', 'nonce');
+
+    $post_id = isset($_POST['post_id']) ? intval($_POST['post_id']) : 0;
+    if (!$post_id || get_post_type($post_id) !== 'software') {
+        wp_send_json_error();
+    }
+
+    $count = (int) get_post_meta($post_id, 'softmir_clicks', true);
+    update_post_meta($post_id, 'softmir_clicks', $count + 1);
+
+    wp_send_json_success(['clicks' => $count + 1]);
+}
+add_action('wp_ajax_softmir_track_click', 'softmir_ajax_track_click');
+add_action('wp_ajax_nopriv_softmir_track_click', 'softmir_ajax_track_click');
+
+// ========== Site Reviews Localization ==========
+function softmir_translate_site_reviews($translated_text, $text, $domain)
+{
+    if ($domain === 'site-reviews' || empty($domain)) {
+        $translations = [
+            'excellent' => [
+                'uk' => 'Відмінно',
+                'ru' => 'Отлично',
+            ],
+            'very good' => [
+                'uk' => 'Дуже добре',
+                'ru' => 'Очень хорошо',
+            ],
+            'average' => [
+                'uk' => 'Середньо',
+                'ru' => 'Средне',
+            ],
+            'poor' => [
+                'uk' => 'Погано',
+                'ru' => 'Плохо',
+            ],
+            'terrible' => [
+                'uk' => 'Жахливо',
+                'ru' => 'Ужасно',
+            ],
+            'write a review' => [
+                'uk' => 'Написати відгук',
+                'ru' => 'Написать отзыв',
+            ],
+        ];
+
+        $lookup = strtolower(trim($text));
+        if (isset($translations[$lookup])) {
+            $lang = function_exists('pll_current_language') ? pll_current_language() : 'ru';
+            return $translations[$lookup][$lang] ?? $translated_text;
+        }
+    }
+    return $translated_text;
+}
+add_filter('gettext', 'softmir_translate_site_reviews', 20, 3);
+
+// ========== Flush Rewrite on Activation ==========
+function softmir_flush_rewrites()
+{
+    softmir_cpt_software();
+    softmir_cpt_integrator();
+    softmir_cpt_sw_attribute();
+    softmir_taxonomy_software_category();
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'softmir_flush_rewrites');
+
+// ========== RankMath SEO Compatibility ==========
+/**
+ * Disable RankMath Schema on Software pages since we have custom JSON-LD
+ */
+add_filter('rank_math/json_ld', function ($data, $jsonld) {
+    if (is_singular('software') || is_post_type_archive('software') || is_tax('software_category')) {
+        return []; // Return empty array to strip RankMath's schema
+    }
+    return $data;
+}, 99, 2);
+
+/**
+ * Optionally, disable the RankMath meta box on specific post types
+ * if we want to manage it entirely via our own ACF fields.
+ * For now, we leave it active so you can manually edit titles/descriptions.
+ */
+// add_filter( 'rank_math/metabox/post_types', function( $post_types ) {
+//     if( in_array( 'sw_attribute', $post_types ) ) {
+//         unset( $post_types['sw_attribute'] );
+//     }
+//     return $post_types;
+// });
+
+// ========== Compare Feature AJAX Handler ==========
+add_action('wp_ajax_softmir_get_compare_titles', 'softmir_ajax_get_compare_titles');
+add_action('wp_ajax_nopriv_softmir_get_compare_titles', 'softmir_ajax_get_compare_titles');
+
+function softmir_ajax_get_compare_titles()
+{
+    check_ajax_referer('softmir_compare', 'nonce');
+
+    $ids = isset($_POST['ids']) ? array_map('intval', $_POST['ids']) : [];
+    if (empty($ids)) {
+        wp_send_json_error();
+    }
+
+    $q = new WP_Query([
+        'post_type' => 'software',
+        'post__in' => $ids,
+        'posts_per_page' => 4,
+        'orderby' => 'post__in'
+    ]);
+
+    ob_start();
+    if ($q->have_posts()) {
+        while ($q->have_posts()) {
+            $q->the_post();
+            $logo = get_field('company_logo');
+            echo '<div class="compare-item-preview" title="' . esc_attr(get_the_title()) . '">';
+            if ($logo) {
+                echo '<img src="' . esc_url($logo) . '" alt="" class="compare-preview-logo" loading="lazy">';
+            }
+            echo '<span class="compare-preview-title">' . esc_html(get_the_title()) . '</span>';
+            echo '<span class="compare-item-remove" data-id="' . get_the_ID() . '">✕</span>';
+            echo '</div>';
+        }
+        wp_reset_postdata();
+    }
+    $html = ob_get_clean();
+
+    wp_send_json_success(['html' => $html]);
+}
+
+// ========== Compare Feature Page ID Helper ==========
+function softmir_get_compare_page_id()
+{
+    // Attempt to find a page using the compare template
+    $pages = get_pages([
+        'meta_key' => '_wp_page_template',
+        'meta_value' => 'page-compare.php',
+        'number' => 1
+    ]);
+    if (!empty($pages)) {
+        return $pages[0]->ID;
+    }
+    return 0;
+}
+
+// ========== CTA Email Subscription AJAX Handler ==========
+add_action('wp_ajax_softmir_cta_subscribe', 'softmir_cta_subscribe_handler');
+add_action('wp_ajax_nopriv_softmir_cta_subscribe', 'softmir_cta_subscribe_handler');
+
+function softmir_cta_subscribe_handler()
+{
+    check_ajax_referer('softmir_cta_subscribe', 'nonce');
+
+    $email = isset($_POST['email']) ? sanitize_email($_POST['email']) : '';
+    if (!is_email($email)) {
+        wp_send_json_error(['message' => __('Некорректный email-адрес.', 'softmir')]);
+    }
+
+    // Store subscriber in wp_options (simple approach)
+    $subscribers = get_option('softmir_cta_subscribers', []);
+    if (in_array($email, $subscribers)) {
+        wp_send_json_error(['message' => __('Этот email уже подписан.', 'softmir')]);
+    }
+    $subscribers[] = $email;
+    update_option('softmir_cta_subscribers', $subscribers);
+
+    // Send notification to admin
+    $admin_email = get_option('admin_email');
+    $subject = sprintf(__('[SoftMir] Новая заявка: %s', 'softmir'), $email);
+    $body = sprintf(__('Пользователь %s оставил заявку через CTA-форму на сайте.', 'softmir'), $email);
+    wp_mail($admin_email, $subject, $body);
+
+    wp_send_json_success();
+}
+
+// ========== Affiliate Link Cloaking: /go/software-slug/ ==========
+function softmir_go_redirect_rewrite()
+{
+    add_rewrite_rule(
+        '^go/([^/]+)/?$',
+        'index.php?softmir_go=$matches[1]',
+        'top'
+    );
+}
+add_action('init', 'softmir_go_redirect_rewrite');
+
+function softmir_go_query_var($vars)
+{
+    $vars[] = 'softmir_go';
+    return $vars;
+}
+add_filter('query_vars', 'softmir_go_query_var');
+
+function softmir_go_redirect_template()
+{
+    $slug = get_query_var('softmir_go');
+    if (!$slug)
+        return;
+
+    $post = get_page_by_path($slug, OBJECT, 'software');
+    if (!$post) {
+        wp_safe_redirect(home_url('/'));
+        exit;
+    }
+
+    $website = get_field('website_url', $post->ID);
+    if ($website) {
+        // Track the click
+        $count = (int) get_post_meta($post->ID, 'softmir_clicks', true);
+        update_post_meta($post->ID, 'softmir_clicks', $count + 1);
+
+        wp_redirect($website, 301);
+        exit;
+    }
+
+    // Fallback to the software page itself
+    wp_safe_redirect(get_permalink($post->ID));
+    exit;
+}
+add_action('template_redirect', 'softmir_go_redirect_template');
+
+// ========== Admin: Scout Source Column & Filter ==========
+
+/**
+ * Add "Источник" (Source) column to software list table
+ */
+function softmir_software_source_column($columns)
+{
+    $new = [];
+    foreach ($columns as $key => $label) {
+        $new[$key] = $label;
+        if ($key === 'title') {
+            $new['sw_source'] = '📦 Источник';
+        }
+    }
+    return $new;
+}
+add_filter('manage_software_posts_columns', 'softmir_software_source_column');
+
+/**
+ * Render source column content
+ */
+function softmir_software_source_column_content($column, $post_id)
+{
+    if ($column !== 'sw_source')
+        return;
+
+    $status = get_post_meta($post_id, 'software_status', true);
+    if ($status === 'external_scout') {
+        echo '<span style="display:inline-flex;align-items:center;gap:4px;padding:3px 8px;background:#fff3cd;border:1px solid #ffc107;border-radius:4px;font-size:12px;font-weight:500;color:#856404;">🤖 Скаут</span>';
+    } else {
+        echo '<span style="color:#888;">—</span>';
+    }
+}
+add_action('manage_software_posts_custom_column', 'softmir_software_source_column_content', 10, 2);
+
+/**
+ * Add "Источник" dropdown filter in software list
+ */
+function softmir_software_source_filter()
+{
+    global $typenow;
+    if ($typenow !== 'software')
+        return;
+
+    $current = $_GET['sw_source_filter'] ?? '';
+    ?>
+    <select name="sw_source_filter">
+        <option value="">Все источники</option>
+        <option value="scout" <?php selected($current, 'scout'); ?>>🤖 Скаут (Квиз)</option>
+        <option value="manual" <?php selected($current, 'manual'); ?>>✍️ Ручное добавление</option>
+    </select>
+    <?php
+}
+add_action('restrict_manage_posts', 'softmir_software_source_filter');
+
+/**
+ * Apply source filter to query
+ */
+function softmir_software_source_filter_query($query)
+{
+    global $pagenow, $typenow;
+    if (!is_admin() || $pagenow !== 'edit.php' || $typenow !== 'software' || !$query->is_main_query())
+        return;
+
+    $filter = $_GET['sw_source_filter'] ?? '';
+    if ($filter === 'scout') {
+        $query->set('meta_key', 'software_status');
+        $query->set('meta_value', 'external_scout');
+    } elseif ($filter === 'manual') {
+        $query->set('meta_query', [
+            'relation' => 'OR',
+            ['key' => 'software_status', 'compare' => 'NOT EXISTS'],
+            ['key' => 'software_status', 'value' => 'external_scout', 'compare' => '!='],
+        ]);
+    }
+}
+add_action('pre_get_posts', 'softmir_software_source_filter_query');
+
+/**
+ * Add "Скаут" view link in the views bar (All | Mine | Published | Scout)
+ */
+function softmir_software_views_scout($views)
+{
+    global $wpdb;
+    $count = (int) $wpdb->get_var(
+        "SELECT COUNT(*) FROM {$wpdb->posts} p
+         INNER JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id
+         WHERE p.post_type = 'software' AND p.post_status = 'publish'
+         AND pm.meta_key = 'software_status' AND pm.meta_value = 'external_scout'"
+    );
+
+    $current = ($_GET['sw_source_filter'] ?? '') === 'scout' ? 'class="current"' : '';
+    $url = admin_url('edit.php?post_type=software&sw_source_filter=scout');
+    $views['scout'] = "<a href=\"{$url}\" {$current}>🤖 Скаут <span class=\"count\">({$count})</span></a>";
+
+    return $views;
+}
+add_filter('views_edit-software', 'softmir_software_views_scout');
+
+/**
+ * Make source column sortable
+ */
+function softmir_software_source_sortable($columns)
+{
+    $columns['sw_source'] = 'sw_source';
+    return $columns;
+}
+add_filter('manage_edit-software_sortable_columns', 'softmir_software_source_sortable');
+
+function softmir_software_source_orderby($query)
+{
+    if (!is_admin() || !$query->is_main_query())
+        return;
+    if ($query->get('orderby') === 'sw_source') {
+        $query->set('meta_key', 'software_status');
+        $query->set('orderby', 'meta_value');
+    }
+}
+add_action('pre_get_posts', 'softmir_software_source_orderby');
+
+/**
+ * Получить логотип компании с поддержкой фоллбэка через Polylang (если Media Module блокирует картинки)
+ */
+function softmir_get_company_logo($post_id = null)
+{
+    if (!$post_id) {
+        $post_id = get_the_ID();
+    }
+
+    // Пытаемся получить стандартным способом
+    $logo = get_field('company_logo', $post_id);
+    if (!empty($logo)) {
+        return $logo;
+    }
+
+    // Если логотип скрыт из-за отсутствия перевода медиа в Polylang: ищем в оригинале
+    if (function_exists('pll_get_post_translations')) {
+        $translations = pll_get_post_translations($post_id);
+        if (!empty($translations)) {
+            foreach ($translations as $lang => $trans_id) {
+                if ($trans_id != $post_id) {
+                    $raw_logo = get_post_meta($trans_id, 'company_logo', true);
+                    if ($raw_logo) {
+                        if (is_numeric($raw_logo)) {
+                            $url = wp_get_attachment_url($raw_logo);
+                            if ($url)
+                                return $url;
+                        } else {
+                            return $raw_logo;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return '';
+}

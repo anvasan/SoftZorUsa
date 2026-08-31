@@ -1,0 +1,407 @@
+<?php
+/**
+ * AI Content Pipeline — Единый модуль генерации карточек ПО
+ *
+ * 4-шаговый пайплайн:
+ *   1. Аналитик — сбор фактуры и JSON
+ *   2. Копирайтер — генерация HTML full_description
+ *   3. Редактор — отжим воды, проверка HTML
+ *   4. Критик (QA) — оценка качества, при score < 6 → перегенерация
+ *
+ * Используется всеми каналами: админка, крон, квиз.
+ *
+ * @package SoftMir
+ */
+
+if (!defined('ABSPATH')) exit;
+
+/* ========================================================================
+ * 1. ОБЩИЕ ПРАВИЛА КАЧЕСТВА (единое место для всех каналов)
+ * ======================================================================== */
+
+function softmir_get_quality_rules(): string {
+    return
+        "АНТИГАЛЛЮЦИНАЦИЯ: ЗАПРЕЩЕНО выдумывать факты. Нет данных → 'Идёт сбор данных'.\n\n"
+
+        . "═══ РАЗДЕЛЕНИЕ БЛОКОВ ═══\n"
+        . "advantages/disadvantages = ТЕХНИЧЕСКИЙ обзор (функции, ограничения, отзывы пользователей).\n"
+        . "best_for/bad_for = БИЗНЕС-совет (тип компании + ситуация, БЕЗ повтора техники).\n\n"
+
+        . "═══ ДЛИНА И СТИЛЬ ПУНКТОВ (ВСЕ БЛОКИ) ═══\n"
+        . "Каждый пункт — ОДНО предложение, 10-18 слов. Не раздувай!\n"
+        . "ЗАПРЕЩЕНЫ ФРАЗЫ-УДЛИНИТЕЛИ: 'что позволяет', 'что обеспечивает', 'что идеально подходит', 'значительно ускоряя', 'что упрощает', 'что затрудняет'. Пиши БЕЗ них — одна мысль, одно предложение.\n"
+        . "ЗАПРЕЩЕНЫ ВВОДНЫЕ: 'начинающих свой путь', 'по всему миру', 'из единого центра'. Это вода.\n\n"
+
+        . "ПРАВИЛА advantages (✅ Почему это ТОП):\n"
+        . "   - Макс 7 пунктов. Каждый 10-18 слов.\n"
+        . "   - ТЕХНИЧЕСКИЕ достоинства: функции, возможности, особенности.\n"
+        . "   - Добавляй краткий КОНТЕКСТ пользы, но без раздувания.\n"
+        . "   - ТЕСТ НА КОНТЕКСТ: цифра — плюс для отрасли? 'Доставляемость 78%%' — ПЛОХО (норма 95%%+), в disadvantages.\n"
+        . "   - ЗАПРЕЩЕНО: прилагательные без фактов ('удобный', 'мощный', 'гибкий').\n"
+        . "   ✅ 'Щедрый бесплатный план с 15 000 email/мес, подходящий для стартапов и малого бизнеса.'\n"
+        . "   ✅ 'Drag-and-Drop конструктор для рассылок, сайтов и чат-ботов, не требующий технических навыков.'\n"
+        . "   ✅ 'Автоматизация Automation 360 для настройки цепочек касаний на основе поведения пользователей.'\n"
+        . "   ❌ 'Щедрый бесплатный план позволяет отправлять до 15 000 email в месяц для 500 подписчиков, что идеально подходит для стартапов и малого бизнеса, начинающих свой путь в маркетинге.' (30 слов — РАЗДУТО!)\n\n"
+
+        . "ПРАВИЛА disadvantages (⚠️ Нюансы и Риски):\n"
+        . "   - Макс 7 пунктов. Каждый 10-18 слов.\n"
+        . "   - ТЕХНИЧЕСКИЕ ограничения: слабости платформы, проблемы из отзывов.\n"
+        . "   - ЗАПРЕЩЕНО: 'Отсутствие упоминания о...', 'Нет информации о...', 'Не указано наличие...' — то, что ты НЕ НАШЁЛ, не значит, что этого нет. Пиши только ПОДТВЕРЖДЁННЫЕ ограничения.\n"
+        . "   - Макс 1 пункт про Free-план. Остальные — про продукт в целом.\n"
+        . "   - ═══ АБСОЛЮТНЫЙ ЗАПРЕТ НА ХЕДЖИРОВАНИЕ ═══\n"
+        . "   Слова 'может', 'иногда', 'порой', 'бывает', 'не всегда', 'для некоторых' — ЗАПРЕЩЕНЫ В ЛЮБОЙ ФОРМЕ.\n"
+        . "   Вместо 'может казаться перегруженным' → 'Интерфейс перегружен функциями'.\n"
+        . "   Вместо 'иногда попадают в спам' → 'Доставляемость на среднем уровне (78%% во входящие)'.\n"
+        . "   Вместо 'может нарушать сроки' → 'Модерация кампаний задерживает отправку писем'.\n"
+        . "   ✅ 'Ограниченные возможности аналитики и сегментации для продвинутых пользователей.'\n"
+        . "   ✅ 'Необходимость создавать отдельные чат-боты для каждого канала (Facebook, Instagram, WhatsApp).'\n"
+        . "   ✅ 'Платформа замедляется при работе с большими списками контактов.'\n"
+        . "   ❌ 'Интерфейс платформы может казаться перегруженным или устаревшим для некоторых пользователей, что затрудняет навигацию.' (ХЕДЖИРОВАНИЕ + УДЛИНИТЕЛЬ)\n\n"
+
+        . "ПРАВИЛА best_for (🚀 Вам ПОДОЙДЁТ, если):\n"
+        . "   - Макс 5 пунктов. Каждый 10-18 слов.\n"
+        . "   - ПРОФИЛЬ БИЗНЕСА + его ПОТРЕБНОСТЬ. Не функции продукта.\n"
+        . "   ✅ 'Малый и средний бизнес, стремящийся централизовать маркетинговые коммуникации.'\n"
+        . "   ✅ 'Онлайн-школы и инфобизнесмены для создания и продвижения курсов.'\n"
+        . "   ❌ 'Малый и средний бизнес' (нет контекста)\n\n"
+
+        . "ПРАВИЛА bad_for (❌ Лучше не брать, если):\n"
+        . "   - Макс 5 пунктов. Каждый 10-18 слов. БЕЗ префикса 'Не брать, если:' — он уже в заголовке блока.\n"
+        . "   - ПРОФИЛЬ БИЗНЕСА + ПРИЧИНА. НЕ повторяй disadvantages!\n"
+        . "   - ЗАПРЕЩЕНО: 'бюджет ограничен', 'команда не готова', ссылки на Free-план.\n"
+        . "   ✅ 'Крупный бизнес, требующий продвинутой сегментации и отчётности корпоративного уровня.'\n"
+        . "   ✅ 'Компании, которым нужна кастомизация автоматизации уровня ActiveCampaign.'\n"
+        . "   ❌ 'Не брать, если: критична максимальная доставляемость...' (НЕ дублируй 'Не брать, если:')\n\n"
+
+        . "ТАБУ НА КЛИШЕ: 'швейцарский нож', 'единое окно', 'всё в одном месте', 'универсальный инструмент', 'комплексное решение', 'единая платформа'.\n\n"
+
+        . "СТИЛЬ: Рваный ритм. Табу на 'безусловно', 'кроме того', 'важно отметить', 'инновационный'. Язык пользы.\n";
+}
+
+/* ========================================================================
+ * 2. JSON-СХЕМА ОТВЕТА (единая)
+ * ======================================================================== */
+
+function softmir_get_json_schema(): string {
+    return '{
+        "title": "[Короткий Убойный Заголовок с выгодой]. ЗАПРЕЩЕНО писать Обзор/Цены/Отзывы",
+        "short_description": "Краткое описание 1-2 предл",
+        "price_summary": "Специфичная цена (напр. От $10/мес). МАКС 60 символов!",
+        "origin": "Страна происхождения",
+        "tech_specs": "Тех данные",
+        "integrations": ["Trello", "Slack"],
+        "scenarios": [ {"title": "Сценарий", "desc": "Описание"} ],
+        "business_areas_list": [ {"area": "Сфера", "benefit": "Выгода"} ],
+        "pricing_list": [ {"name": "План 1", "price": "100", "features": "ф1, ф2"} ],
+        "features": ["функция 1"],
+        "advantages": ["ТЕХНИЧЕСКОЕ достоинство продукта (10-18 слов). Макс 7 пунктов"],
+        "disadvantages": ["ТЕХНИЧЕСКОЕ ограничение продукта из отзывов (10-18 слов). Макс 7 пунктов"],
+        "best_for": ["ПРОФИЛЬ БИЗНЕСА + потребность (10-18 слов). Макс 5 пунктов"],
+        "bad_for": ["ПРОФИЛЬ БИЗНЕСА + причина (10-18 слов). БЕЗ префикса. НЕ дублировать disadvantages. Макс 5"],
+        "logo_url": "url",
+        "verdict": "Вердикт выгоды: Почему это подходит (1-2 предл)",
+        "focus_keyword": "SEO-слово",
+        "rank_math_title": "SEO-заголовок (50-60 символов)",
+        "rank_math_description": "SEO-описание (140-160 символов)",
+        "rank_math_permalink": "slug-na-angliyskom",
+        "category_key_functions": ["Функция 1"],
+        "attributes": [{"id": "id", "value": "значение"}],
+        "external_reviews": [{"source": "Capterra", "rating": "4.5", "text": "Цитата"}],
+        "scraping_failed": false,
+        "is_referral": false,
+        "seo_strategy": {
+            "target_audience": "Портрет ЦА",
+            "core_pain": "Главная боль",
+            "tone_of_voice": "Business/Expert",
+            "lsi_keywords": ["LSI 1", "LSI 2"]
+        }
+    }';
+}
+
+/* ========================================================================
+ * 3. ОБЁРТКА GEMINI API С RETRY И FALLBACK
+ * ======================================================================== */
+
+function softmir_pipeline_gemini_call(string $prompt, array $options = []): array|WP_Error {
+    $api_key = function_exists('softmir_get_gemini_key')
+        ? softmir_get_gemini_key()
+        : (defined('GOOGLE_GEMINI_KEY') ? GOOGLE_GEMINI_KEY : '');
+
+    if (empty($api_key)) {
+        return new WP_Error('no_api_key', 'Gemini API Key is missing.');
+    }
+
+    $temperature = $options['temperature'] ?? 0.1;
+    $timeout     = $options['timeout'] ?? 90;
+    $use_search  = $options['use_search'] ?? true;
+
+    $body = [
+        'contents' => [['parts' => [['text' => $prompt]]]],
+        'generationConfig' => ['temperature' => $temperature],
+    ];
+    if ($use_search) {
+        $body['tools'] = [['googleSearch' => new stdClass()]];
+    }
+    if (!empty($options['response_mime'])) {
+        $body['generationConfig']['responseMimeType'] = $options['response_mime'];
+    }
+
+    // Model fallback chain
+    $primary_endpoint = defined('SOFTMIR_GEMINI_ENDPOINT')
+        ? SOFTMIR_GEMINI_ENDPOINT . '?key=' . $api_key
+        : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=' . $api_key;
+    $fallback_endpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=' . $api_key;
+
+    $models = [
+        ['endpoint' => $primary_endpoint, 'retries' => 3, 'name' => 'gemini-2.5-flash'],
+        ['endpoint' => $fallback_endpoint, 'retries' => 2, 'name' => 'gemini-2.5-flash-lite'],
+    ];
+
+    $res = null;
+    $status_code = 0;
+
+    foreach ($models as $model) {
+        for ($attempt = 1; $attempt <= $model['retries']; $attempt++) {
+            if ($attempt == $model['retries']) {
+                $body['generationConfig']['temperature'] = max(0.05, $temperature - 0.05);
+            }
+            $res = wp_remote_post($model['endpoint'], [
+                'headers' => ['Content-Type' => 'application/json'],
+                'body' => wp_json_encode($body),
+                'timeout' => $timeout,
+            ]);
+            $status_code = is_wp_error($res) ? 0 : wp_remote_retrieve_response_code($res);
+            if ($status_code === 200) {
+                if ($model['name'] !== 'gemini-2.5-flash' && function_exists('softmir_log_ai_action')) {
+                    softmir_log_ai_action("⚠️ Фолбэк: используется {$model['name']}.");
+                }
+                break 2;
+            }
+            if (in_array($status_code, [429, 500, 503]) && $attempt < $model['retries']) {
+                sleep(5);
+            }
+        }
+        sleep(3);
+    }
+
+    if (is_wp_error($res) || $status_code !== 200) {
+        $err = is_wp_error($res) ? $res->get_error_message() : $status_code . ' ' . wp_remote_retrieve_body($res);
+        return new WP_Error('gemini_api', 'Gemini Error: ' . substr($err, 0, 300));
+    }
+
+    // Extract text from all parts (Google Search returns multi-part)
+    $data = json_decode(wp_remote_retrieve_body($res), true);
+    $text = '';
+    foreach (($data['candidates'][0]['content']['parts'] ?? []) as $part) {
+        if (isset($part['text'])) {
+            $text .= $part['text'];
+        }
+    }
+
+    if (empty($text) && isset($data['candidates'][0]['finishReason'])) {
+        return new WP_Error('empty_response', 'Empty: ' . $data['candidates'][0]['finishReason']);
+    }
+
+    return ['text' => $text, 'raw' => $data];
+}
+
+/* ========================================================================
+ * 4. ГЛАВНЫЙ 4-ШАГОВЫЙ ПАЙПЛАЙН
+ * ======================================================================== */
+
+/**
+ * Генерация полной карточки ПО через 4-шаговый пайплайн.
+ *
+ * @param string $url         URL сайта продукта
+ * @param string $lang_name   Язык вывода (Russian, Ukrainian, etc.)
+ * @param array  $options     [
+ *   'attrs_prompt'     => string,  // промпт атрибутов категории
+ *   'cat_funcs_prompt' => string,  // промпт функций категории
+ *   'post_title'       => string,  // для логов
+ * ]
+ * @return array|WP_Error     JSON-данные карточки
+ */
+function softmir_run_content_pipeline(string $url, string $lang_name = 'Russian', array $options = []): array|WP_Error {
+    $attrs_prompt     = $options['attrs_prompt'] ?? '';
+    $cat_funcs_prompt = $options['cat_funcs_prompt'] ?? '';
+    $post_title       = $options['post_title'] ?? $url;
+    $quality_rules    = softmir_get_quality_rules();
+    $json_schema      = softmir_get_json_schema();
+
+    // ─── STEP 1: АНАЛИТИК ───────────────────────────────────────────
+    if (function_exists('softmir_log_ai_action')) {
+        softmir_log_ai_action("🕵️ Агент 1 (Аналитик): Сбор фактуры для '{$post_title}'...");
+    }
+
+    $step1_prompt = "РОЛЬ: Ты - Senior Product Analyst & Data Miner.\n"
+        . "ЦЕЛЬ: Проанализируй контент сайта ({$url}) и извлеки 100% специфицированную фактуру без 'воды'.\n\n"
+        . "ИСТОЧНИК ДАННЫХ: Используй Google Search для получения РЕАЛЬНОЙ информации с {$url}. "
+        . "Обязательно найди /pricing, /features, /integrations, /about и реальные отзывы.\n\n"
+        . "ПРАВИЛА:\n"
+        . "1. Если сайт недоступен (Cloudflare, 403, 525, Captcha) — поставь \"scraping_failed\": true.\n"
+        . "2. Определи, является ли {$url} реферальной ссылкой (?ref=, aff=, partner). Если да — \"is_referral\": true.\n"
+        . "3. ТОЛЬКО конкретика (названия модулей, числа, реальные интеграции). НИКАКОЙ абстракции.\n"
+        . "{$quality_rules}\n"
+        . "ИНТЕРНЕТ-ПОИСК (ВАЖНО): Для external_reviews, price_summary и disadvantages ОБЯЗАТЕЛЬНО используй Google Search.\n"
+        . "SEO:\n"
+        . "   - ЗАПРЕЩЕНО 'Цены', '2024', 'Отзывы' в заголовках.\n"
+        . "   - focus_keyword: [Название продукта].\n"
+        . "   - rank_math_title: '[Продукт]: Обзор [Категория] ([Выгода])' (50-60 символов).\n"
+        . "   - rank_math_description: 140-160 символов, продающее описание с CTA.\n"
+        . "   - rank_math_permalink: КОРОТКИЙ slug латиницей, макс 2 слова.\n"
+        . "УНИКАЛЬНОСТЬ short_description: НЕ дублировать блок 'Почему SoftZor рекомендует' из full_description.\n\n"
+        . "СТРОГИЕ ПРАВИЛА ДЛЯ РЫНКА УКРАИНЫ:\n"
+        . "1. Исключай софт RU/BY происхождения (под санкциями).\n"
+        . "2. Цены ТОЛЬКО в USD, EUR или UAH.\n"
+        . "3. ВЕСЬ текст на языке: {$lang_name}!\n"
+        . "5. category_key_functions — ВЫБИРАЙ СТРОГО из 'РЕЙТИНГ ФУНКЦИЙ', не выдумывай.\n\n"
+        . ($attrs_prompt ? "АТРИБУТЫ:\n{$attrs_prompt}\n" : '')
+        . ($cat_funcs_prompt ? "КАТЕГОРИИ ФУНКЦИЙ:\n{$cat_funcs_prompt}\n" : '')
+        . "Язык: {$lang_name}\n\n"
+        . "ОТВЕТ — СТРОГО JSON:\n{$json_schema}";
+
+    $res1 = softmir_pipeline_gemini_call($step1_prompt, ['temperature' => 0.1]);
+    if (is_wp_error($res1)) return $res1;
+
+    $ai_json = json_decode(trim(preg_replace('/^```json\s*|\s*```$/i', '', $res1['text'])), true);
+    if (!is_array($ai_json)) {
+        return new WP_Error('invalid_json', 'Step 1: Invalid JSON. Raw: ' . substr($res1['text'], 0, 300));
+    }
+
+    if (!empty($ai_json['scraping_failed'])) {
+        if (function_exists('softmir_log_ai_action')) {
+            softmir_log_ai_action("🚫 Сайт '{$url}' недоступен. Генерация прервана.");
+        }
+        return new WP_Error('scraping_failed', "Сайт {$url} недоступен (Cloudflare/403/525).");
+    }
+
+    // ─── STEP 2: КОПИРАЙТЕР ─────────────────────────────────────────
+    if (function_exists('softmir_log_ai_action')) {
+        softmir_log_ai_action("✍️ Агент 2 (Копирайтер): Генерация HTML для '{$post_title}'...");
+    }
+
+    $seo_strat = json_encode($ai_json['seo_strategy'] ?? [], JSON_UNESCAPED_UNICODE);
+    $factura = json_encode([
+        'features'      => $ai_json['features'] ?? [],
+        'integrations'  => $ai_json['integrations'] ?? [],
+        'price'         => $ai_json['price_summary'] ?? '',
+        'advantages'    => $ai_json['advantages'] ?? [],
+        'disadvantages' => $ai_json['disadvantages'] ?? [],
+        'real_reviews'  => $ai_json['external_reviews'] ?? [],
+    ], JSON_UNESCAPED_UNICODE);
+
+    $step2_prompt = "РОЛЬ: Экспертный B2B Копирайтер (уровня Максима Ильяхова).\n"
+        . "ЦЕЛЬ: Написать блок 'Полное описание' продукта в строгом HTML.\n\n"
+        . "=== СТРАТЕГИЯ (от Аналитика) ===\n{$seo_strat}\n"
+        . "=== ФАКТЫ ===\n{$factura}\n\n"
+        . "ПРАВИЛА: Рваный ритм. Язык пользы. Реальные термины из фактуры. Язык: {$lang_name}.\n"
+        . "ЗАПРЕЩЕНО: 'швейцарский нож', 'незаменимый помощник', 'единое окно', 'всё в одном месте'.\n"
+        . "Блок 'Почему SoftZor рекомендует' НЕ дублирует short_description.\n\n"
+        . "ФОРМАТ (ТОЛЬКО HTML, без markdown/JSON):\n"
+        . "<p>🟢 <b>Релевантность: [85-99]% ([Вердикт])</b><br><b>Почему SoftZor рекомендует:</b> «[2 строчки]».</p>\n"
+        . "<p>⚡ <b>[Название]: [Суть]</b><br>[1-2 предложения].</p>\n"
+        . "<h3>⚙️ Главные функции</h3>\n<ul><li>[Смайл] <b>[Функция]</b> ➔ [Польза]</li></ul>\n"
+        . "<h3>📊 Сложность внедрения</h3>\n<p><b>Порог входа:</b> [Описание].<br><b>Интерфейс:</b> [Описание].<br><b>Для кого:</b> [Профиль].<br><b>С кем дружит:</b> [Интеграции].</p>\n"
+        . "<h3>🌐 Плюсы и минусы</h3>\n<p>👍 <b>Что хвалят:</b> [Резюме].<br>👎 <b>Слабые стороны:</b> [Резюме].</p>\n"
+        . "<h3>💰 Цены и тарифы</h3>\n"
+        . "<p><b>Модель оплаты:</b> [Описание. Если цен нет — 'С тарифами ознакомьтесь на <a href=\"{$url}\" target=\"_blank\">официальном сайте</a>'].<br>"
+        . "<b>Стоимость:</b> [Рамки цен, если известны].</p>";
+
+    $res2 = softmir_pipeline_gemini_call($step2_prompt, ['temperature' => 0.4, 'use_search' => true]);
+    $draft_html = is_wp_error($res2) ? '' : trim($res2['text']);
+
+    // ─── STEP 3: РЕДАКТОР ───────────────────────────────────────────
+    if (!empty($draft_html)) {
+        if (function_exists('softmir_log_ai_action')) {
+            softmir_log_ai_action("🧐 Агент 3 (Редактор): Отжим воды для '{$post_title}'...");
+        }
+
+        $step3_prompt = "РОЛЬ: Строгий Главный Редактор.\n"
+            . "ЦЕЛЬ: Очистить HTML от штампов, клише, воды, канцеляризмов. Оставить мясо и пользу.\n\n"
+            . "Чек-лист:\n"
+            . "1. Удали 'в современном мире', 'инновационное решение', 'уникальный продукт'.\n"
+            . "2. Удали 'швейцарский нож', 'единое окно', 'всё в одном месте'. Замени конкретикой.\n"
+            . "3. Оценочные прилагательные без доказательств → замени фактами.\n"
+            . "4. Проверь целостность HTML (p, h3, ul, li, b). Удали ```html.\n"
+            . "5. 'Почему SoftZor рекомендует этот продукт:' ОБЯЗАТЕЛЬНО в <b>.\n"
+            . "6. Язык: {$lang_name}\n\n"
+            . "Текст:\n{$draft_html}\n\n"
+            . "ВЕРНИ ТОЛЬКО ОЧИЩЕННЫЙ HTML.";
+
+        $res3 = softmir_pipeline_gemini_call($step3_prompt, ['temperature' => 0.1, 'timeout' => 60]);
+        if (!is_wp_error($res3)) {
+            $clean = preg_replace('/^```html\s*|\s*```$/i', '', trim($res3['text']));
+            if (!empty($clean)) $draft_html = $clean;
+        }
+    }
+
+    $ai_json['full_description'] = $draft_html;
+
+    // ─── STEP 4: КРИТИК (QA) ────────────────────────────────────────
+    if (function_exists('softmir_log_ai_action')) {
+        softmir_log_ai_action("🔍 Агент 4 (Критик): Проверка качества для '{$post_title}'...");
+    }
+
+    $qa_result = softmir_pipeline_qa_check($ai_json);
+    if (!is_wp_error($qa_result)) {
+        $score = intval($qa_result['score'] ?? 0);
+        $feedback = $qa_result['feedback'] ?? '';
+        if (function_exists('softmir_log_ai_action')) {
+            softmir_log_ai_action("📊 QA Score: {$score}/10 — {$feedback}");
+        }
+        $ai_json['_qa_score'] = $score;
+        $ai_json['_qa_feedback'] = $feedback;
+
+        // Если критик дал < 6, перегенерируем Step 2-3 с обратной связью
+        if ($score < 6 && !empty($factura)) {
+            if (function_exists('softmir_log_ai_action')) {
+                softmir_log_ai_action("🔄 Перегенерация: QA дал {$score}/10. Причина: {$feedback}");
+            }
+            $retry_prompt = $step2_prompt . "\n\nОБРАТНАЯ СВЯЗЬ ОТ QA (ИСПРАВЬ!):\n{$feedback}";
+            $res2r = softmir_pipeline_gemini_call($retry_prompt, ['temperature' => 0.3, 'use_search' => true]);
+            if (!is_wp_error($res2r)) {
+                $retry_html = preg_replace('/^```html\s*|\s*```$/i', '', trim($res2r['text']));
+                if (!empty($retry_html)) {
+                    $ai_json['full_description'] = $retry_html;
+                    $ai_json['_qa_score'] = $score . ' → retry';
+                }
+            }
+        }
+    }
+
+    unset($ai_json['seo_strategy']); // Cleanup
+    return $ai_json;
+}
+
+/* ========================================================================
+ * 5. QA-КРИТИК (проверка качества)
+ * ======================================================================== */
+
+function softmir_pipeline_qa_check(array $ai_data): array|WP_Error {
+    $json_payload = wp_json_encode($ai_data, JSON_UNESCAPED_UNICODE);
+    $quality_rules = softmir_get_quality_rules();
+
+    $prompt = "РОЛЬ: Строгий QA-инженер и редактор B2B-контента.\n\n"
+        . "ЗАДАЧА: Проверь качество карточки ПО. Оцени по этим правилам:\n{$quality_rules}\n\n"
+        . "ДАННЫЕ:\n{$json_payload}\n\n"
+        . "ФОРМАТ: Строго JSON с полями:\n"
+        . "- 'score': число 1-10 (10 = идеально)\n"
+        . "- 'feedback': 1-2 предложения с конкретными замечаниями\n";
+
+    $res = softmir_pipeline_gemini_call($prompt, [
+        'temperature'   => 0.1,
+        'timeout'       => 30,
+        'use_search'    => false,
+        'response_mime' => 'application/json',
+    ]);
+
+    if (is_wp_error($res)) return $res;
+
+    $raw = str_replace(['```json', '```'], '', trim($res['text']));
+    $result = json_decode(trim($raw), true);
+
+    if (isset($result['score'], $result['feedback'])) {
+        return $result;
+    }
+    return new WP_Error('qa_parse', 'Cannot parse QA JSON');
+}

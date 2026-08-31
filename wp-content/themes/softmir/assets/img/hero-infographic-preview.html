@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SoftMir Hero Infographic — Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        h2 {
+            color: #334155;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+        }
+        .preview-container {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #f5f3ff 50%, #ede9fe 75%, #f0f9ff 100%);
+            border-radius: 1rem;
+            padding: 3rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            max-width: 1280px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        }
+        .preview-container::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .preview-container::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero-text {
+            flex: 1;
+            z-index: 1;
+        }
+        .hero-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #0f172a;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+        }
+        .hero-text h1 em {
+            font-style: normal;
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hero-text p {
+            color: #64748b;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.875rem 2rem;
+            background: #0ea5e9;
+            color: #fff;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 1rem;
+            text-decoration: none;
+            box-shadow: 0 4px 14px rgba(14, 165, 233, 0.35);
+            transition: all 0.25s;
+        }
+        .hero-btn:hover {
+            background: #0369a1;
+            transform: translateY(-2px);
+        }
+
+        /* --- Infographic SVG area --- */
+        .hero-infographic {
+            flex: 1;
+            max-width: 540px;
+            z-index: 1;
+            position: relative;
+        }
+
+        .infographic-svg {
+            width: 100%;
+            height: auto;
+        }
+
+        /* Floating animations */
+        @keyframes float1 { 0%,100%{ transform: translateY(0px); } 50%{ transform: translateY(-12px); } }
+        @keyframes float2 { 0%,100%{ transform: translateY(0px); } 50%{ transform: translateY(-8px); } }
+        @keyframes float3 { 0%,100%{ transform: translateY(0px); } 50%{ transform: translateY(-15px); } }
+        @keyframes pulse { 0%,100%{ opacity: 1; } 50%{ opacity: 0.7; } }
+        @keyframes dashDraw { to { stroke-dashoffset: 0; } }
+
+        .float-1 { animation: float1 4s ease-in-out infinite; }
+        .float-2 { animation: float2 3.5s ease-in-out infinite 0.5s; }
+        .float-3 { animation: float3 5s ease-in-out infinite 1s; }
+        .float-4 { animation: float2 4.5s ease-in-out infinite 1.5s; }
+        .float-5 { animation: float1 3s ease-in-out infinite 0.8s; }
+        .float-6 { animation: float3 4s ease-in-out infinite 0.3s; }
+        .pulse-line { animation: pulse 2s ease-in-out infinite; }
+
+        .note {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 0.875rem;
+            margin-top: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <h2>🖼 Предварительный просмотр инфографики для Hero-секции SoftMir</h2>
+
+    <div class="preview-container">
+        <!-- Left: Text (as in current hero) -->
+        <div class="hero-text">
+            <h1>Найдите <em>идеальное ПО</em> для вашего бизнеса</h1>
+            <p>Catalog проверенных CRM-систем, инструментов управления проектами и решений для e-commerce.</p>
+            <a href="#" class="hero-btn">Перейти в каталог →</a>
+        </div>
+
+        <!-- Right: SVG Infographic -->
+        <div class="hero-infographic">
+            <svg class="infographic-svg" viewBox="0 0 500 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <!-- Central Dashboard Monitor -->
+                <g class="float-2">
+                    <!-- Monitor body -->
+                    <rect x="120" y="100" width="260" height="175" rx="12" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+                    <!-- Screen -->
+                    <rect x="132" y="112" width="236" height="140" rx="6" fill="#f8fafc"/>
+                    
+                    <!-- Dashboard content: bar chart -->
+                    <rect x="150" y="200" width="24" height="40" rx="3" fill="#bae6fd"/>
+                    <rect x="182" y="180" width="24" height="60" rx="3" fill="#0ea5e9"/>
+                    <rect x="214" y="190" width="24" height="50" rx="3" fill="#bae6fd"/>
+                    <rect x="246" y="165" width="24" height="75" rx="3" fill="#0ea5e9"/>
+                    <rect x="278" y="175" width="24" height="65" rx="3" fill="#8b5cf6"/>
+                    <rect x="310" y="155" width="24" height="85" rx="3" fill="#0ea5e9"/>
+                    
+                    <!-- Dashboard: line chart -->
+                    <path d="M150 145 L190 135 L230 140 L270 125 L310 130 L350 118" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round" fill="none" class="pulse-line"/>
+                    <circle cx="150" cy="145" r="3" fill="#8b5cf6"/>
+                    <circle cx="190" cy="135" r="3" fill="#8b5cf6"/>
+                    <circle cx="230" cy="140" r="3" fill="#8b5cf6"/>
+                    <circle cx="270" cy="125" r="3" fill="#8b5cf6"/>
+                    <circle cx="310" cy="130" r="3" fill="#8b5cf6"/>
+                    <circle cx="350" cy="118" r="3" fill="#8b5cf6"/>
+                    
+                    <!-- Monitor stand -->
+                    <rect x="220" y="275" width="60" height="8" rx="4" fill="#e2e8f0"/>
+                    <rect x="240" y="275" width="20" height="20" rx="2" fill="#e2e8f0"/>
+                    <rect x="210" y="292" width="80" height="6" rx="3" fill="#cbd5e1"/>
+                </g>
+
+                <!-- ===== Floating Icons ===== -->
+                
+                <!-- CRM / People icon (top-left) -->
+                <g class="float-1" transform="translate(30, 40)">
+                    <rect width="70" height="70" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <circle cx="35" cy="28" r="10" fill="#0ea5e9" opacity="0.15"/>
+                    <circle cx="35" cy="25" r="7" fill="#0ea5e9"/>
+                    <path d="M20 48 C20 38 50 38 50 48" fill="#0ea5e9" opacity="0.7"/>
+                    <text x="35" y="63" text-anchor="middle" fill="#64748b" font-size="8" font-weight="600" font-family="Inter, sans-serif">CRM</text>
+                </g>
+                
+                <!-- Cloud/SaaS icon (top-right) -->
+                <g class="float-3" transform="translate(410, 20)">
+                    <rect width="70" height="70" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <path d="M25 42 C20 42 18 36 22 33 C22 27 30 24 35 28 C38 24 48 24 48 32 C53 32 54 40 49 42 Z" fill="#8b5cf6" opacity="0.8"/>
+                    <text x="35" y="62" text-anchor="middle" fill="#64748b" font-size="8" font-weight="600" font-family="Inter, sans-serif">SaaS</text>
+                </g>
+                
+                <!-- E-commerce / Cart icon (bottom-right) -->
+                <g class="float-5" transform="translate(420, 250)">
+                    <rect width="70" height="70" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <path d="M22 28 L26 28 L32 46 L50 46" stroke="#0ea5e9" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+                    <circle cx="34" cy="52" r="3" fill="#0ea5e9"/>
+                    <circle cx="47" cy="52" r="3" fill="#0ea5e9"/>
+                    <path d="M27 30 L50 30 L47 42 L30 42 Z" fill="#0ea5e9" opacity="0.2" stroke="#0ea5e9" stroke-width="1.5"/>
+                    <text x="35" y="66" text-anchor="middle" fill="#64748b" font-size="7" font-weight="600" font-family="Inter, sans-serif">Shop</text>
+                </g>
+                
+                <!-- Project Management / Kanban (left-center) -->
+                <g class="float-4" transform="translate(10, 200)">
+                    <rect width="80" height="75" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <!-- 3 mini kanban columns -->
+                    <rect x="14" y="16" width="16" height="5" rx="2" fill="#0ea5e9"/>
+                    <rect x="14" y="24" width="16" height="12" rx="2" fill="#0ea5e9" opacity="0.3"/>
+                    <rect x="14" y="39" width="16" height="8" rx="2" fill="#0ea5e9" opacity="0.3"/>
+                    
+                    <rect x="33" y="16" width="16" height="5" rx="2" fill="#8b5cf6"/>
+                    <rect x="33" y="24" width="16" height="8" rx="2" fill="#8b5cf6" opacity="0.3"/>
+                    <rect x="33" y="35" width="16" height="12" rx="2" fill="#8b5cf6" opacity="0.3"/>
+                    
+                    <rect x="52" y="16" width="16" height="5" rx="2" fill="#22c55e"/>
+                    <rect x="52" y="24" width="16" height="15" rx="2" fill="#22c55e" opacity="0.3"/>
+                    
+                    <text x="40" y="65" text-anchor="middle" fill="#64748b" font-size="7" font-weight="600" font-family="Inter, sans-serif">Проекты</text>
+                </g>
+                
+                <!-- Analytics / Pie chart (top-center) -->
+                <g class="float-6" transform="translate(220, 10)">
+                    <rect x="-5" y="-5" width="70" height="70" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <!-- Pie chart -->
+                    <circle cx="30" cy="28" r="16" fill="#e0f2fe" />
+                    <path d="M30 12 A16 16 0 0 1 46 28 L30 28 Z" fill="#0ea5e9"/>
+                    <path d="M46 28 A16 16 0 0 1 30 44 L30 28 Z" fill="#8b5cf6" opacity="0.7"/>
+                    <text x="30" y="58" text-anchor="middle" fill="#64748b" font-size="7" font-weight="600" font-family="Inter, sans-serif">Analytics</text>
+                </g>
+                
+                <!-- Automation / Gear icon (bottom-left) -->
+                <g class="float-1" transform="translate(90, 320)">
+                    <rect width="70" height="65" rx="16" fill="white" stroke="#e2e8f0" stroke-width="1"/>
+                    <g transform="translate(35, 28)">
+                        <circle cx="0" cy="0" r="8" fill="#0ea5e9" opacity="0.2"/>
+                        <circle cx="0" cy="0" r="5" fill="none" stroke="#0ea5e9" stroke-width="2"/>
+                        <!-- Gear teeth -->
+                        <rect x="-2" y="-12" width="4" height="5" rx="1" fill="#0ea5e9"/>
+                        <rect x="-2" y="7" width="4" height="5" rx="1" fill="#0ea5e9"/>
+                        <rect x="-12" y="-2" width="5" height="4" rx="1" fill="#0ea5e9"/>
+                        <rect x="7" y="-2" width="5" height="4" rx="1" fill="#0ea5e9"/>
+                        <rect x="5" y="-10" width="4" height="5" rx="1" fill="#0ea5e9" transform="rotate(45, 7, -7.5)"/>
+                        <rect x="-10" y="5" width="4" height="5" rx="1" fill="#0ea5e9" transform="rotate(45, -8, 7.5)"/>
+                        <rect x="-10" y="-10" width="4" height="5" rx="1" fill="#0ea5e9" transform="rotate(-45, -8, -7.5)"/>
+                        <rect x="5" y="5" width="4" height="5" rx="1" fill="#0ea5e9" transform="rotate(-45, 7, 7.5)"/>
+                    </g>
+                    <text x="35" y="54" text-anchor="middle" fill="#64748b" font-size="7" font-weight="600" font-family="Inter, sans-serif">Авто</text>
+                </g>
+
+                <!-- Connecting dotted lines from icons to center -->
+                <line x1="100" y1="75" x2="140" y2="120" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+                <line x1="410" y1="55" x2="380" y2="110" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+                <line x1="90" y1="237" x2="120" y2="200" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+                <line x1="420" y1="285" x2="380" y2="260" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+                <line x1="250" y1="65" x2="250" y2="100" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+                <line x1="125" y1="345" x2="180" y2="290" stroke="#cbd5e1" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+
+                <!-- Small decorative dots -->
+                <circle cx="400" cy="150" r="3" fill="#0ea5e9" opacity="0.3"/>
+                <circle cx="105" cy="140" r="2" fill="#8b5cf6" opacity="0.3"/>
+                <circle cx="380" cy="340" r="4" fill="#0ea5e9" opacity="0.2"/>
+                <circle cx="320" cy="350" r="2" fill="#8b5cf6" opacity="0.25"/>
+                <circle cx="460" cy="180" r="3" fill="#8b5cf6" opacity="0.2"/>
+            </svg>
+        </div>
+    </div>
+
+    <p class="note">Это предварительный просмотр. Инфографика будет интегрирована в Hero-секцию справа от текста с плавающими анимациями.</p>
+</body>
+</html>
