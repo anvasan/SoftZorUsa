@@ -21,10 +21,6 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./
-        server-dir: public_html/
-        exclude: |
-          **/.git*
-          **/.git*/**
-          **/.github*/**
-          git_files.txt
+        local-dir: wp-content/themes/softmir/
+        server-dir: public_html/wp-content/themes/softmir/
+        dangerous-clean-slate: false
