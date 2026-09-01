@@ -7,21 +7,33 @@ on:
   workflow_dispatch:
 
 jobs:
-  web-deploy:
-    name: ?? Deploy
+  deploy:
+    name: Deploy ${{ matrix.name }}
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - name: Theme (SoftMir)
+            local_dir: ./wp-content/themes/softmir/
+            server_dir: public_html/wp-content/themes/softmir/
+            state_name: .ftp-deploy-sync-state-theme.json
+          - name: MU Plugins
+            local_dir: ./wp-content/mu-plugins/
+            server_dir: public_html/wp-content/mu-plugins/
+            state_name: .ftp-deploy-sync-state-muplugins.json
     steps:
-    - name: ?? Get latest code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
+      - name: Get latest code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       
-    - name: ?? Sync files via FTP
-      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
-      with:
-        server: ${{ secrets.FTP_SERVER }}
-        username: ${{ secrets.FTP_USERNAME }}
-        password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: wp-content/themes/softmir/
-        server-dir: public_html/wp-content/themes/softmir/
-        dangerous-clean-slate: false
+      - name: Sync files via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ${{ matrix.local_dir }}
+          server-dir: ${{ matrix.server_dir }}
+          state-name: ${{ matrix.state_name }}
+          dangerous-clean-slate: false
