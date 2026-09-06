@@ -302,6 +302,7 @@ function softmir_autofill_meta_box_html($post)
                     setMetaField('tech_specs', d.tech_specs);
                     setMetaField('scenarios_md', d.scenarios_md);
                     setMetaField('key_features', d.key_features);
+                    setMetaField('custom_features', d.custom_features);
                     setMetaField('top_reasons', d.top_reasons);
                     setMetaField('disadvantages', d.disadvantages);
                     setMetaField('best_for', d.best_for);
@@ -744,6 +745,7 @@ function softmir_autofill_background_worker($post_id)
         'source'                => 'Gemini + Google Search',
         'scenarios_md'          => $save_result['scenarios_md'] ?? '',
         'key_features'          => $save_result['key_features'] ?? '',
+        'custom_features'       => $save_result['custom_features'] ?? '',
         'top_reasons'           => $save_result['top_reasons'] ?? '',
         'disadvantages'         => $save_result['disadvantages'] ?? '',
         'best_for'              => $save_result['best_for'] ?? '',
@@ -848,6 +850,22 @@ function softmir_autofill_save_fields($post_id, $item, $overwrite = true)
                     $result[$acf_key] = $text;
                 }
             }
+        }
+    }
+
+    // Product Key Features (from website)
+    if (!empty($item['custom_features'])) {
+        $current_cf = get_post_meta($post_id, 'custom_features', true);
+        if ($overwrite || empty($current_cf)) {
+            if (is_array($item['custom_features'])) {
+                $cf_clean = array_map('sanitize_text_field', $item['custom_features']);
+                $cf_clean = array_filter(array_map('trim', $cf_clean));
+                $cf_string = implode(', ', $cf_clean);
+            } else {
+                $cf_string = sanitize_textarea_field($item['custom_features']);
+            }
+            update_post_meta($post_id, 'custom_features', $cf_string);
+            $result['custom_features'] = $cf_string;
         }
     }
 

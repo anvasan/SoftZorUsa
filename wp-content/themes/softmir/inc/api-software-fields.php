@@ -20,7 +20,7 @@ add_action('rest_api_init', function () {
         'features'               => ['type' => 'array'],
         'tech_specs'             => ['type' => 'string'],
         'category_key_functions' => ['type' => 'array'],
-        'custom_features'        => ['type' => 'array'],
+        'custom_features'        => ['type' => ['array', 'string']],
         'integrations'           => ['type' => 'array'],
         'price_summary'          => ['type' => 'string'],
         'pricing_list'           => ['type' => 'array'],
@@ -42,6 +42,9 @@ add_action('rest_api_init', function () {
         register_rest_field('software', $field, [
             'get_callback' => function ($post) use ($field, $schema) {
                 $val = get_post_meta($post['id'], $field, true);
+                if ($field === 'custom_features') {
+                    return $val ?: '';
+                }
                 if ($schema['type'] === 'boolean') {
                     return (bool)$val;
                 }
@@ -54,6 +57,18 @@ add_action('rest_api_init', function () {
             'update_callback' => function ($value, $post) use ($field, $schema) {
                 if (!current_user_can('edit_post', $post->ID)) {
                     return new WP_Error('rest_forbidden', 'No rights', ['status' => 403]);
+                }
+
+                // Custom features (Product Key Features from website)
+                if ($field === 'custom_features') {
+                    if (is_array($value)) {
+                        $features = array_filter(array_map('sanitize_text_field', $value));
+                        $features_str = implode(', ', $features);
+                    } else {
+                        $features_str = sanitize_textarea_field($value);
+                    }
+                    update_post_meta($post->ID, 'custom_features', $features_str);
+                    return true;
                 }
 
                 // If it's an array/object, WordPress/ACF usually handles it as serialized array
