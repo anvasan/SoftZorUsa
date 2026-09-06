@@ -860,12 +860,21 @@ function softmir_get_field_with_lang_fallback($field_name, $post_id = 0)
         $post_id = get_the_ID();
 
     $val = get_field($field_name, $post_id);
-    if (!empty($val))
+    if (!empty($val)) {
+        // Safeguard: text fields must return strings, not arrays
+        if (is_array($val)) {
+            $val = implode(', ', array_filter(array_map('strval', $val)));
+        }
         return $val;
+    }
 
     $val = get_post_meta($post_id, $field_name, true);
-    if (!empty($val))
+    if (!empty($val)) {
+        if (is_array($val)) {
+            $val = implode(', ', array_filter(array_map('strval', $val)));
+        }
         return $val;
+    }
 
     if (function_exists('pll_default_language') && function_exists('pll_get_post_translations')) {
         $default_lang = pll_default_language();
@@ -881,6 +890,10 @@ function softmir_get_field_with_lang_fallback($field_name, $post_id = 0)
                 }
             }
         }
+    }
+
+    if (is_array($val)) {
+        $val = implode(', ', array_filter(array_map('strval', $val)));
     }
 
     return $val ? $val : '';

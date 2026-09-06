@@ -37,6 +37,12 @@ function softmir_get_text_field($field_name)
     if (empty($val)) {
         $val = get_post_meta(get_the_ID(), $field_name, true);
     }
+    
+    // Safeguard: text fields must return strings, not arrays
+    if (is_array($val)) {
+        $val = implode(', ', array_filter(array_map('strval', $val)));
+    }
+    
     return $val;
 }
 
