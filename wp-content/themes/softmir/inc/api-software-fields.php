@@ -43,7 +43,10 @@ add_action('rest_api_init', function () {
             'get_callback' => function ($post) use ($field, $schema) {
                 $val = get_post_meta($post['id'], $field, true);
                 if ($field === 'custom_features') {
-                    return $val ?: '';
+                    if (is_array($val)) {
+                        return implode(', ', array_filter(array_map('trim', $val)));
+                    }
+                    return is_string($val) ? $val : '';
                 }
                 if ($schema['type'] === 'boolean') {
                     return (bool)$val;

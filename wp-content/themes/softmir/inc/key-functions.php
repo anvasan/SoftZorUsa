@@ -288,6 +288,11 @@ function softmir_software_key_functions_render($post)
     }
 
     $custom_features = get_post_meta($post->ID, 'custom_features', true);
+    if (is_array($custom_features)) {
+        $custom_features = implode(', ', array_filter(array_map('trim', $custom_features)));
+    } elseif (!is_string($custom_features)) {
+        $custom_features = '';
+    }
 
     echo '<div style="margin-bottom: 15px;">';
     echo '<label for="sw_custom_features" style="font-weight: 600; display: block; margin-bottom: 5px;">' . esc_html__('Product Key Features (from website)', 'softmir') . '</label>';

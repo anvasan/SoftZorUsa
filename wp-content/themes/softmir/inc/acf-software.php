@@ -158,3 +158,18 @@ if (function_exists('acf_add_local_field_group')):
     ));
 
 endif;
+
+// Safeguard: Ensure ACF textarea and text fields never receive arrays (prevents fatal TypeError in esc_textarea)
+add_filter('acf/load_value/type=textarea', function ($value, $post_id, $field) {
+    if (is_array($value)) {
+        return implode("\n", array_filter(array_map('strval', $value)));
+    }
+    return $value;
+}, 10, 3);
+
+add_filter('acf/load_value/type=text', function ($value, $post_id, $field) {
+    if (is_array($value)) {
+        return implode(', ', array_filter(array_map('strval', $value)));
+    }
+    return $value;
+}, 10, 3);

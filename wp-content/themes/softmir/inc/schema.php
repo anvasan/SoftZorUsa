@@ -155,7 +155,11 @@ function softmir_schema_software()
     // ===== Feature List from custom features (with fallback to category key functions) =====
     $custom_feats = get_post_meta($post_id, 'custom_features', true);
     if (!empty($custom_feats)) {
-        $feature_names = array_map('trim', explode(',', $custom_feats));
+        if (is_array($custom_feats)) {
+            $feature_names = $custom_feats;
+        } else {
+            $feature_names = array_map('trim', explode(',', $custom_feats));
+        }
         $feature_names = array_slice(array_filter($feature_names), 0, 10);
     } else {
         $key_funcs = get_post_meta($post_id, '_selected_key_functions', true);
