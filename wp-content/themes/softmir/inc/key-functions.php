@@ -204,6 +204,21 @@ function softmir_software_key_functions_render($post)
 {
     wp_nonce_field('softmir_key_functions', 'softmir_key_functions_nonce');
 
+    // ========== 1. Always show Product Key Features (custom_features) ==========
+    $custom_features = get_post_meta($post->ID, 'custom_features', true);
+    if (is_array($custom_features)) {
+        $custom_features = implode(', ', array_filter(array_map('trim', $custom_features)));
+    } elseif (!is_string($custom_features)) {
+        $custom_features = '';
+    }
+
+    echo '<div style="margin-bottom: 15px;">';
+    echo '<label for="sw_custom_features" style="font-weight: 600; display: block; margin-bottom: 5px;">' . esc_html__('Product Key Features (from website)', 'softmir') . '</label>';
+    echo '<textarea name="sw_custom_features" id="sw_custom_features" rows="3" class="large-text">' . esc_textarea($custom_features) . '</textarea>';
+    echo '<p class="description" style="margin-top: 5px; margin-bottom: 0;">' . esc_html__('Comma-separated. Filled automatically during enrichment. Displayed on the frontend of the card.', 'softmir') . '</p>';
+    echo '</div>';
+
+    // ========== 2. Get Primary Category for Standard Features ==========
     // Get primary category from ACF
     $primary_cat_id = get_post_meta($post->ID, 'primary_category', true);
 
@@ -287,18 +302,6 @@ function softmir_software_key_functions_render($post)
         $selected_functions = [];
     }
 
-    $custom_features = get_post_meta($post->ID, 'custom_features', true);
-    if (is_array($custom_features)) {
-        $custom_features = implode(', ', array_filter(array_map('trim', $custom_features)));
-    } elseif (!is_string($custom_features)) {
-        $custom_features = '';
-    }
-
-    echo '<div style="margin-bottom: 15px;">';
-    echo '<label for="sw_custom_features" style="font-weight: 600; display: block; margin-bottom: 5px;">' . esc_html__('Product Key Features (from website)', 'softmir') . '</label>';
-    echo '<textarea name="sw_custom_features" id="sw_custom_features" rows="3" class="large-text">' . esc_textarea($custom_features) . '</textarea>';
-    echo '<p class="description" style="margin-top: 5px; margin-bottom: 0;">' . esc_html__('Comma-separated. Filled automatically during enrichment. Displayed on the frontend of the card.', 'softmir') . '</p>';
-    echo '</div>';
 
     echo '<details style="margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">';
     echo '<summary style="cursor:pointer; font-weight:600; color:#666;">📊 ' . esc_html__('Standard Category Features (for Compare)', 'softmir') . '</summary>';
