@@ -1505,5 +1505,3 @@ add_filter('pll_rel_hreflang_attributes', function ($hreflangs) {
 // ========== Universal Platform Branding ==========
 require_once get_template_directory() . '/inc/branding.php';
 
-// ========== Temporary Category Migration Tool ==========
-require_once get_template_directory() . '/inc/category-migration.php';
