@@ -681,3 +681,17 @@ function softzor_render_category_migration_page() {
     echo '</form>';
     echo '</div>';
 }
+
+// Register REST API route for migration
+add_action('rest_api_init', function () {
+    register_rest_route('softmir/v1', '/run-category-migration', [
+        'methods' => 'POST',
+        'callback' => function () {
+            return rest_ensure_response(softzor_run_category_migration());
+        },
+        'permission_callback' => function () {
+            return current_user_can('manage_options');
+        }
+    ]);
+});
+
