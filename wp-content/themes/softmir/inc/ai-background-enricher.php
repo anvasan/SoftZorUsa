@@ -360,6 +360,19 @@ function softmir_apply_ai_data_to_post($post_id, $ai_data)
         update_post_meta($post_id, 'key_features', $html);
     }
 
+    // Product Key Features (custom_features from website)
+    $cf_source = !empty($ai_data['custom_features']) ? $ai_data['custom_features'] : (!empty($ai_data['features']) ? $ai_data['features'] : null);
+    if (!empty($cf_source)) {
+        if (is_array($cf_source)) {
+            $cf_clean = array_map('sanitize_text_field', $cf_source);
+            $cf_clean = array_filter(array_map('trim', $cf_clean));
+            $cf_string = implode(', ', $cf_clean);
+        } else {
+            $cf_string = sanitize_textarea_field($cf_source);
+        }
+        update_post_meta($post_id, 'custom_features', $cf_string);
+    }
+
     // Business Areas Table
     if (!empty($ai_data['business_areas_list']) && is_array($ai_data['business_areas_list'])) {
         $rows = "";

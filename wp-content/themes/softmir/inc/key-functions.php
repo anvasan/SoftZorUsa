@@ -191,7 +191,7 @@ function softmir_key_functions_meta_box()
 {
     add_meta_box(
         'softmir_software_key_functions',
-        '🔑 Key features (from category)',
+        '🔑 ' . esc_html__('Key Features', 'softmir'),
         'softmir_software_key_functions_render',
         'software',
         'normal',
@@ -204,7 +204,23 @@ function softmir_software_key_functions_render($post)
 {
     wp_nonce_field('softmir_key_functions', 'softmir_key_functions_nonce');
 
-    // Get primary category from ACF
+    // ========== 1. Always show Product Key Features (custom_features) ==========
+    $custom_features = get_post_meta($post->ID, 'custom_features', true);
+    if (is_array($custom_features)) {
+        $custom_features = implode(', ', array_filter(array_map('trim', $custom_features)));
+    } elseif (!is_string($custom_features)) {
+        $custom_features = '';
+    }
+
+    echo '<div style="margin-bottom: 15px;">';
+    echo '<label for="sw_custom_features" style="font-weight: 600; display: block; margin-bottom: 5px;">' . esc_html__('Product Key Features (from website)', 'softmir') . '</label>';
+    echo '<textarea name="sw_custom_features" id="sw_custom_features" rows="3" class="large-text">' . esc_textarea($custom_features) . '</textarea>';
+    echo '<p class="description" style="margin-top: 5px; margin-bottom: 0;">' . esc_html__('Comma-separated. Filled automatically during enrichment. Displayed on the frontend of the card.', 'softmir') . '</p>';
+    echo '</div>';
+
+    // ========== 2. Get Primary Category for Standard Features ==========
+    echo '<hr style="margin: 20px 0 15px; border: 0; border-top: 1px solid #ddd;">';
+
     $primary_cat_id = get_post_meta($post->ID, 'primary_category', true);
 
     if (!$primary_cat_id) {
@@ -216,20 +232,20 @@ function softmir_software_key_functions_render($post)
     }
 
     if (!$primary_cat_id) {
-        echo '<p style="color:#d63638; font-weight:bold;">⚠️ Select Main Category (or any category in the right panel) and save a draft to see available features.</p>';
+        echo '<p style="color:#666; font-size: 13px;">ℹ️ <em>' . esc_html__('Select Main Category (or any category in the right panel) and save a draft to see available category features for Compare.', 'softmir') . '</em></p>';
         return;
     }
 
     $term = get_term($primary_cat_id, 'software_category');
     if (!$term || is_wp_error($term)) {
-        echo '<p>Category not found.</p>';
+        echo '<p style="color:#666; font-size: 13px;">' . esc_html__('Category not found.', 'softmir') . '</p>';
         return;
     }
 
     $available_functions = softmir_get_all_key_functions_for_category($primary_cat_id);
 
     if (empty($available_functions)) {
-        echo '<p style="color:#d63638;">In category "<strong>' . esc_html($term->name) . '</strong>" no key functions are specified.</p>';
+        echo '<p style="color:#d63638; margin-bottom: 10px;">' . sprintf(esc_html__('In category "%s" no key functions are specified.', 'softmir'), esc_html($term->name)) . '</p>';
         ?>
         <div style="margin-bottom: 15px;">
             <button type="button" class="button button-primary ai-generate-functions-btn-inline"
@@ -287,14 +303,7 @@ function softmir_software_key_functions_render($post)
         $selected_functions = [];
     }
 
-    $custom_features = get_post_meta($post->ID, 'custom_features', true);
-
-    echo '<div style="margin-bottom: 15px;">';
-    echo '<label for="sw_custom_features" style="font-weight: 600; display: block; margin-bottom: 5px;">' . esc_html__('Product Key Features (from website)', 'softmir') . '</label>';
-    echo '<textarea name="sw_custom_features" id="sw_custom_features" rows="3" class="large-text">' . esc_textarea($custom_features) . '</textarea>';
-    echo '<p class="description" style="margin-top: 5px; margin-bottom: 0;">' . esc_html__('Comma-separated. Filled automatically during enrichment. Displayed on the frontend of the card.', 'softmir') . '</p>';
-    echo '</div>';
-
+    echo '<input type="hidden" name="sw_category_functions_rendered" value="1">';
     echo '<details style="margin-top: 15px; padding: 10px; background: #f9f9f9; border: 1px solid #ddd;">';
     echo '<summary style="cursor:pointer; font-weight:600; color:#666;">📊 ' . esc_html__('Standard Category Features (for Compare)', 'softmir') . '</summary>';
     echo '<p style="margin-top: 10px;">' . sprintf(esc_html__('Select the features supported by the product (varies by category %s):', 'softmir'), '<strong>' . esc_html($term->name) . '</strong>') . '</p>';
@@ -326,11 +335,13 @@ function softmir_key_functions_save_post($post_id)
         return;
     }
 
-    if (isset($_POST['sw_selected_functions']) && is_array($_POST['sw_selected_functions'])) {
-        $funcs = array_map('sanitize_text_field', $_POST['sw_selected_functions']);
-        update_post_meta($post_id, '_selected_key_functions', $funcs);
-    } else {
-        update_post_meta($post_id, '_selected_key_functions', []);
+    if (isset($_POST['sw_category_functions_rendered'])) {
+        if (isset($_POST['sw_selected_functions']) && is_array($_POST['sw_selected_functions'])) {
+            $funcs = array_map('sanitize_text_field', $_POST['sw_selected_functions']);
+            update_post_meta($post_id, '_selected_key_functions', $funcs);
+        } else {
+            update_post_meta($post_id, '_selected_key_functions', []);
+        }
     }
 
     if (isset($_POST['sw_custom_features'])) {

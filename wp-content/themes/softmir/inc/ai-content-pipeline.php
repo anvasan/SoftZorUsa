@@ -101,6 +101,7 @@ function softmir_get_json_schema(): string {
         "business_areas_list": [ {"area": "Sphere", "benefit": "Benefit"} ],
         "pricing_list": [ {"name": "Plan 1", "price": "100", "features": "f1, f2"} ],
         "features": ["feature 1"],
+        "custom_features": ["Product feature 1 (from website)", "Product feature 2"],
         "advantages": ["TECHNICAL advantage of the product (10-18 words). Max 7 points"],
         "disadvantages": ["TECHNICAL limitation of the product from reviews (10-18 words). Max 7 points"],
         "best_for": ["BUSINESS PROFILE + need (10-18 words). Max 5 points"],
@@ -300,7 +301,8 @@ function softmir_run_content_pipeline(string $url, string $lang_name = 'English'
         . "1. Exclude software of RU/BY origin (under sanctions).\n"
         . "2. Prices are ONLY in USD, EUR or UAH.\n"
         . "3. ВЕСЬ текст на языке: {$lang_name}!\n"
-        . "5. category_key_functions — CHOOSE STRICTLY from the 'FUNCTION RATING', don't make things up.\n\n"
+        . "5. category_key_functions — CHOOSE STRICTLY from the 'FUNCTION RATING', don't make things up.\n"
+        . "6. custom_features — 4-8 specific product key features found directly on its website/landing page (independent of category).\n\n"
         . ($attrs_prompt ? "АТРAndБУТЫ:\n{$attrs_prompt}\n" : '')
         . ($cat_funcs_prompt ? "КАТЕГОРAndAnd ФУНКЦAndЙ:\n{$cat_funcs_prompt}\n" : '')
         . "Язык: {$lang_name}\n\n"
@@ -342,12 +344,13 @@ function softmir_run_content_pipeline(string $url, string $lang_name = 'English'
 
     $seo_strat = json_encode($ai_json['seo_strategy'] ?? [], JSON_UNESCAPED_UNICODE);
     $factura = json_encode([
-        'features'      => $ai_json['features'] ?? [],
-        'integrations'  => $ai_json['integrations'] ?? [],
-        'price'         => $ai_json['price_summary'] ?? '',
-        'advantages'    => $ai_json['advantages'] ?? [],
-        'disadvantages' => $ai_json['disadvantages'] ?? [],
-        'real_reviews'  => $ai_json['external_reviews'] ?? [],
+        'features'        => $ai_json['features'] ?? [],
+        'custom_features' => $ai_json['custom_features'] ?? [],
+        'integrations'    => $ai_json['integrations'] ?? [],
+        'price'           => $ai_json['price_summary'] ?? '',
+        'advantages'      => $ai_json['advantages'] ?? [],
+        'disadvantages'   => $ai_json['disadvantages'] ?? [],
+        'real_reviews'    => $ai_json['external_reviews'] ?? [],
     ], JSON_UNESCAPED_UNICODE);
 
     // We attract competitors from the database
