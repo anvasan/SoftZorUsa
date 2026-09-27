@@ -50,7 +50,7 @@ function softzor_render_analytics_dashboard()
             </a>
             <a href="<?php echo esc_url($base_url . '&tab=clicks'); ?>"
                 class="nav-tab <?php echo $active_tab === 'clicks' ? 'nav-tab-active' : ''; ?>">
-                🔗 Clicks by Software
+                🔗 Клики по софту
             </a>
             <a href="<?php echo esc_url($base_url . '&tab=groupbuy'); ?>"
                 class="nav-tab <?php echo $active_tab === 'groupbuy' ? 'nav-tab-active' : ''; ?>">
@@ -264,48 +264,48 @@ function softzor_tab_overview()
 
     $total_software = wp_count_posts('software')->publish;
 
-    // Pretty Links tables initialization
-    $table_links  = $wpdb->prefix . 'prli_links';
-    $table_clicks = $wpdb->prefix . 'prli_clicks';
-    $clicks_table_exists = $wpdb->get_var("SHOW TABLES LIKE '{$table_clicks}'") === $table_clicks;
-    $clicks_30d   = 0;
-    $clicks_7d    = 0;
+    $click_table = $wpdb->prefix . 'softzor_click_log';
+    $gb_table = $wpdb->prefix . 'softzor_group_buying';
+
+    // Check if click_log table exists
+    $click_table_exists = $wpdb->get_var("SHOW TABLES LIKE '{$click_table}'") === $click_table;
+
+    // Bot exclusion pattern for SQL
+    $bot_regex = 'bot|spider|crawl|slurp|mediapartners|google|yandex|bing|ia_archiver|headless|chrome-lighthouse|lighthouse|python|curl|wget|postman|insomnia|vercel|netlify|uptime|statuscake|pingdom|uptimerobot';
+    $bot_filter = "AND user_agent NOT REGEXP '{$bot_regex}'";
+
+    // Clicks last 30 days
+    $clicks_30d = 0;
+    $clicks_7d = 0;
     $clicks_today = 0;
     $click_chart_data = [];
-    if ($clicks_table_exists) {
-        // Clicks excluding bots (robot = 0)
-        $clicks_30d = (int) $wpdb->get_var("
-            SELECT COUNT(*) 
-            FROM {$table_clicks} 
-            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND robot = 0
-        ");
-        
-        $clicks_7d = (int) $wpdb->get_var("
-            SELECT COUNT(*) 
-            FROM {$table_clicks} 
-            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND robot = 0
-        ");
-        
-        $clicks_today = (int) $wpdb->get_var("
-            SELECT COUNT(*) 
-            FROM {$table_clicks} 
-            WHERE DATE(created_at) = CURDATE() AND robot = 0
-        ");
-        // Daily clicks for Chart.js (last 30 days)
+
+    if ($click_table_exists) {
+        $clicks_30d = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$click_table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) {$bot_filter}");
+        $clicks_7d = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$click_table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) {$bot_filter}");
+        $clicks_today = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$click_table} WHERE DATE(created_at) = CURDATE() {$bot_filter}");
+
+        // Daily clicks for chart (last 30 days)
         $click_rows = $wpdb->get_results("
             SELECT DATE(created_at) as day, COUNT(*) as cnt
-            FROM {$table_clicks}
-            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND robot = 0
+            FROM {$click_table}
+            WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) {$bot_filter}
             GROUP BY DATE(created_at)
             ORDER BY day ASC
         ");
         foreach ($click_rows as $r) {
             $click_chart_data[$r->day] = (int) $r->cnt;
         }
+    } else {
+        // Fallback: use legacy _sz_click_count
+        $clicks_30d = (int) $wpdb->get_var("
+            SELECT COALESCE(SUM(CAST(meta_value AS UNSIGNED)), 0)
+            FROM {$wpdb->postmeta}
+            WHERE meta_key = '_sz_click_count'
+        ");
     }
 
     // Group buying stats
-    $gb_table = $wpdb->prefix . 'softzor_group_buying';
     $gb_total = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$gb_table}");
     $gb_pending = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$gb_table} WHERE status = 'pending'");
     $gb_30d = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$gb_table} WHERE created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
@@ -350,13 +350,13 @@ function softzor_tab_overview()
             <div class="sz-kpi-sub">Published</div>
         </div>
         <div class="sz-kpi-card">
-            <h4>Clicks (30 days)</h4>
+            <h4>Клики (30 days)</h4>
             <div class="sz-kpi-value green"><?php echo esc_html($clicks_30d); ?></div>
-            <div class="sz-kpi-sub">Today: <?php echo esc_html($clicks_today); ?> · 7 days:
+            <div class="sz-kpi-sub">Today: <?php echo esc_html($clicks_today); ?> · За 7д:
                 <?php echo esc_html($clicks_7d); ?></div>
         </div>
         <div class="sz-kpi-card">
-            <h4>Requests (30 days)</h4>
+            <h4>Заявки (30 days)</h4>
             <div class="sz-kpi-value orange"><?php echo esc_html($gb_30d); ?></div>
             <div class="sz-kpi-sub">Total: <?php echo esc_html($gb_total); ?> · Active:
                 <?php echo esc_html($gb_pending); ?></div>
@@ -365,18 +365,18 @@ function softzor_tab_overview()
             <h4>Conversion</h4>
             <div class="sz-kpi-value <?php echo $conversion > 5 ? 'green' : 'red'; ?>"><?php echo esc_html($conversion); ?>%
             </div>
-            <div class="sz-kpi-sub">Requests / Clicks · QA: <?php echo esc_html($avg_qa); ?>/10</div>
+            <div class="sz-kpi-sub">Заявки / Клики · QA: <?php echo esc_html($avg_qa); ?>/10</div>
         </div>
     </div>
 
     <!-- Charts -->
     <div class="sz-chart-row">
         <div class="sz-chart-box">
-            <h3>🔗 Outbound Clicks (30 days)</h3>
+            <h3>🔗 Outbound-клики (30 days)</h3>
             <canvas id="sz-clicks-chart" height="200"></canvas>
         </div>
         <div class="sz-chart-box">
-            <h3>🤝 Group Buying Requests (30 days)</h3>
+            <h3>🤝 Заявки на совместные закупки (30 days)</h3>
             <canvas id="sz-gb-chart" height="200"></canvas>
         </div>
     </div>
@@ -443,74 +443,70 @@ function softzor_tab_overview()
 function softzor_tab_clicks()
 {
     global $wpdb;
-    $table_links  = $wpdb->prefix . 'prli_links';
-    $table_clicks = $wpdb->prefix . 'prli_clicks';
-    $table_exists = $wpdb->get_var("SHOW TABLES LIKE '{$table_links}'") === $table_links;
-    if (!$table_exists) {
+    $click_table = $wpdb->prefix . 'softzor_click_log';
+    $click_table_exists = $wpdb->get_var("SHOW TABLES LIKE '{$click_table}'") === $click_table;
+
+    if (!$click_table_exists) {
         echo '<div class="sz-empty-state"><span class="dashicons dashicons-info-outline"></span>';
-        echo '<p>Pretty Links plugin is not active or tables were not found.</p></div>';
+        echo '<p>The click log table has not yet been created. It will appear automatically after the first transition through <code>/go/slug/</code>.</p></div>';
         return;
     }
-    // Link statistics query
+
+    // Bot exclusion pattern for SQL
+    $bot_regex = 'bot|spider|crawl|slurp|mediapartners|google|yandex|bing|ia_archiver|headless|chrome-lighthouse|lighthouse|python|curl|wget|postman|insomnia|vercel|netlify|uptime|statuscake|pingdom|uptimerobot';
+    $bot_filter = "AND user_agent NOT REGEXP '{$bot_regex}'";
+
+    // Software click stats — from click_log
     $rows = $wpdb->get_results("
-        SELECT 
-            pl.id as link_id,
-            pl.name as link_name,
-            pl.slug,
-            pl.url as target_url,
-            pl.clicks as total_clicks,
-            pl.uniques as unique_clicks,
-            COUNT(CASE WHEN pc.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) AND pc.robot = 0 THEN 1 END) as clicks_7d,
-            COUNT(CASE WHEN pc.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) AND pc.robot = 0 THEN 1 END) as clicks_30d,
-            MAX(pc.created_at) as last_click
-        FROM {$table_links} pl
-        LEFT JOIN {$table_clicks} pc ON pl.id = pc.link_id
-        GROUP BY pl.id
-        HAVING total_clicks > 0
+        SELECT
+            cl.software_id,
+            COUNT(*) as total_clicks,
+            SUM(CASE WHEN cl.created_at >= DATE_SUB(NOW(), INTERVAL 7 DAY) THEN 1 ELSE 0 END) as clicks_7d,
+            SUM(CASE WHEN cl.created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY) THEN 1 ELSE 0 END) as clicks_30d,
+            MAX(cl.created_at) as last_click
+        FROM {$click_table} cl
+        WHERE 1=1 {$bot_filter}
+        GROUP BY cl.software_id
         ORDER BY total_clicks DESC
         LIMIT 100
     ");
+
     if (empty($rows)) {
         echo '<div class="sz-empty-state"><span class="dashicons dashicons-chart-line"></span>';
-        echo '<p>No recorded outbound clicks yet.</p></div>';
+        echo '<p>No click data available yet. Clicks will begin to be recorded when clicking through <code>/go/slug/</code>.</p></div>';
         return;
     }
+
     ?>
     <div class="sz-table-box">
-        <h3>🔗 Outbound Clicks by Software (Pretty Links TOP-100)</h3>
+        <h3>🔗 Program clicks (TOP-100)</h3>
         <table class="sz-data-table">
             <thead>
                 <tr>
-                    <th>Software / Link</th>
-                    <th>Short Link</th>
-                    <th class="num">Total Clicks</th>
-                    <th class="num">Unique</th>
-                    <th class="num">7 Days</th>
-                    <th class="num">30 Days</th>
-                    <th>Last Click</th>
+                    <th>Program</th>
+                    <th class="num">Total</th>
+                    <th class="num">7 days</th>
+                    <th class="num">30 days</th>
+                    <th>Last click</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($rows as $row): 
-                    // Search software card by slug
-                    $software_post = get_page_by_path($row->slug, OBJECT, 'software');
-                    $card_link = $software_post ? get_permalink($software_post->ID) : '';
-                    $clean_name = str_replace(['Партнерка: ', 'Affiliate: '], '', $row->link_name);
+                <?php foreach ($rows as $row):
+                    $title = get_the_title($row->software_id);
+                    $edit_link = get_edit_post_link($row->software_id);
+                    $permalink = get_permalink($row->software_id);
                     $last = $row->last_click ? date('d.m.Y H:i', strtotime($row->last_click)) : '—';
-                ?>
+                    ?>
                     <tr>
                         <td>
-                            <strong><?php echo esc_html($clean_name); ?></strong>
-                            <?php if ($card_link): ?>
-                                <br><a href="<?php echo esc_url($card_link); ?>" target="_blank" style="font-size:11px;color:#2271b1;">View Card ↗</a>
+                            <strong><a
+                                    href="<?php echo esc_url($edit_link); ?>"><?php echo esc_html($title ?: '(Deleted #' . $row->software_id . ')'); ?></a></strong>
+                            <?php if ($permalink): ?>
+                                <br><a href="<?php echo esc_url($permalink); ?>" target="_blank"
+                                    style="font-size:11px;color:#8c8f94;">View ↗</a>
                             <?php endif; ?>
                         </td>
-                        <td>
-                            <code>/<?php echo esc_html($row->slug); ?></code>
-                            <br><a href="<?php echo esc_url($row->target_url); ?>" target="_blank" rel="nofollow" style="font-size:11px;color:#8c8f94;">Affiliate URL ↗</a>
-                        </td>
-                        <td class="num"><strong><?php echo esc_html($row->total_clicks); ?></strong></td>
-                        <td class="num"><?php echo esc_html($row->unique_clicks); ?></td>
+                        <td class="num"><?php echo esc_html($row->total_clicks); ?></td>
                         <td class="num"><?php echo esc_html($row->clicks_7d); ?></td>
                         <td class="num"><?php echo esc_html($row->clicks_30d); ?></td>
                         <td><?php echo esc_html($last); ?></td>
@@ -540,7 +536,7 @@ function softzor_tab_group_buying()
     ?>
     <div class="sz-kpi-grid">
         <div class="sz-kpi-card">
-            <h4>Total Requests</h4>
+            <h4>Total заявок</h4>
             <div class="sz-kpi-value blue"><?php echo esc_html($total); ?></div>
             <div class="sz-kpi-sub">All time</div>
         </div>
@@ -557,7 +553,7 @@ function softzor_tab_group_buying()
         <div class="sz-kpi-card">
             <h4>Dynamics</h4>
             <div class="sz-kpi-value blue"><?php echo esc_html($last_30d); ?></div>
-            <div class="sz-kpi-sub">Last 30d · Last 7d: <?php echo esc_html($last_7d); ?></div>
+            <div class="sz-kpi-sub">For 30d · За 7д: <?php echo esc_html($last_7d); ?></div>
         </div>
     </div>
     <?php
@@ -641,7 +637,7 @@ function softzor_tab_group_buying()
             <table class="sz-data-table">
                 <thead>
                     <tr>
-                        <th>Full Name</th>
+                        <th>ФAndО</th>
                         <th>Organization</th>
                         <th>Email</th>
                         <th>Software</th>
