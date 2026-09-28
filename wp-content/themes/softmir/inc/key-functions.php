@@ -204,7 +204,7 @@ function softmir_software_key_functions_render($post)
 {
     wp_nonce_field('softmir_key_functions', 'softmir_key_functions_nonce');
 
-    // ========== 1. Always show Product Key Features (custom_features) ==========
+    // ========== 1. Always show Product Key Features (custom_features) [v1.1.3] ==========
     $custom_features = get_post_meta($post->ID, 'custom_features', true);
     if (is_array($custom_features)) {
         $custom_features = implode(', ', array_filter(array_map('trim', $custom_features)));

@@ -21,6 +21,7 @@ add_action('rest_api_init', function () {
         'tech_specs'             => ['type' => 'string'],
         'category_key_functions' => ['type' => 'array'],
         'custom_features'        => ['type' => ['array', 'string']],
+        'primary_category'       => ['type' => ['integer', 'string']],
         'integrations'           => ['type' => 'array'],
         'price_summary'          => ['type' => 'string'],
         'pricing_list'           => ['type' => 'array'],
@@ -42,6 +43,9 @@ add_action('rest_api_init', function () {
         register_rest_field('software', $field, [
             'get_callback' => function ($post) use ($field, $schema) {
                 $val = get_post_meta($post['id'], $field, true);
+                if ($field === 'primary_category') {
+                    return (int)$val ?: null;
+                }
                 if ($field === 'custom_features') {
                     if (is_array($val)) {
                         return implode(', ', array_filter(array_map('trim', $val)));
@@ -62,13 +66,23 @@ add_action('rest_api_init', function () {
                     return new WP_Error('rest_forbidden', 'No rights', ['status' => 403]);
                 }
 
-                // Custom features (Product Key Features from website)
+                // Primary category (sets both post_meta and ACF field)
+                if ($field === 'primary_category') {
+                    $cat_id = (int)$value;
+                    update_post_meta($post->ID, 'primary_category', $cat_id);
+                    if (function_exists('update_field')) {
+                        update_field('primary_category', $cat_id, $post->ID);
+                    }
+                    return true;
+                }
+
+                // Custom features (Product Key Features from website - always saved as comma-separated string)
                 if ($field === 'custom_features') {
                     if (is_array($value)) {
                         $features = array_filter(array_map('sanitize_text_field', $value));
                         $features_str = implode(', ', $features);
                     } else {
-                        $features_str = sanitize_textarea_field($value);
+                        $features_str = sanitize_textarea_field((string)$value);
                     }
                     update_post_meta($post->ID, 'custom_features', $features_str);
                     return true;
