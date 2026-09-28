@@ -15,11 +15,11 @@ jobs:
         include:
           - name: Theme (SoftMir)
             local_dir: ./wp-content/themes/softmir/
-            server_dir: public_html/wp-content/themes/softmir/
+            server_dir: wp-content/themes/softmir/
             state_name: .ftp-deploy-sync-state-theme-v2.json
           - name: MU Plugins
             local_dir: ./wp-content/mu-plugins/
-            server_dir: public_html/wp-content/mu-plugins/
+            server_dir: wp-content/mu-plugins/
             state_name: .ftp-deploy-sync-state-muplugins-v2.json
     steps:
       - name: Get latest code
