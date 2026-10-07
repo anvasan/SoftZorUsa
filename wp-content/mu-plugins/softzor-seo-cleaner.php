@@ -2,7 +2,7 @@
 /**
  * Plugin Name: SoftZor USA - Legacy 410 Guard & Smart Dev Indexing
  * Description: Permanently removes legacy /listing/ URLs (410 Gone) and prevents staging/coming-soon indexing automatically.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Antigravity
  */
 
@@ -40,18 +40,18 @@ function softzor_is_coming_soon_or_dev() {
         return true;
     }
 
-    // Check SeedProd Coming Soon / Maintenance mode settings
-    $seedprod = get_option('seedprod_settings');
-    if (is_array($seedprod)) {
-        if (!empty($seedprod['enable_coming_soon_mode']) || !empty($seedprod['enable_maintenance_mode'])) {
-            return true;
-        }
+    // Check SeedProd Coming Soon / Maintenance mode settings (stored as JSON string)
+    $seedprod_raw = get_option('seedprod_settings');
+    $seedprod = is_string($seedprod_raw) ? json_decode($seedprod_raw, true) : (is_array($seedprod_raw) ? $seedprod_raw : []);
+
+    if (!empty($seedprod['enable_coming_soon_mode']) || !empty($seedprod['enable_maintenance_mode'])) {
+        return true;
     }
 
     return false;
 }
 
-// Intercept robots.txt when in coming-soon/dev mode
+// Intercept robots.txt when in coming-soon/dev mode before SeedProd or template loads
 if ($softzor_path === '/robots.txt') {
     if (softzor_is_coming_soon_or_dev()) {
         status_header(200);
@@ -71,7 +71,7 @@ add_action('send_headers', function () {
     }
 });
 
-// Immediate header fallback in case send_headers is bypassed by early template exit
+// Immediate header fallback in case send_headers is bypassed by early template exit (SeedProd)
 if (!headers_sent() && softzor_is_coming_soon_or_dev()) {
     header('X-Robots-Tag: noindex, nofollow, noarchive');
 }
