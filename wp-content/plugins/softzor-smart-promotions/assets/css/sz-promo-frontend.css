@@ -1,0 +1,225 @@
+/**
+ * SoftZor Smart Promotions Frontend Styles
+ * Style standard: Clean B2B Flat Modern
+ * AdBlock-proof naming convention
+ */
+
+/* General Wrapper */
+.sz-rec-wrapper {
+    box-sizing: border-box;
+    position: relative;
+    margin: 28px 0;
+    width: 100%;
+}
+
+.sz-rec-wrapper *,
+.sz-rec-wrapper *::before,
+.sz-rec-wrapper *::after {
+    box-sizing: border-box;
+}
+
+/* Image Banner Format */
+.sz-rec-img-link {
+    display: block;
+    text-decoration: none;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sz-rec-img-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.09);
+}
+
+.sz-rec-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Native B2B Card Format */
+.sz-rec-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 5px solid #2563eb;
+    border-radius: 0 12px 12px 0;
+    padding: 22px 26px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sz-rec-card:hover {
+    border-color: #cbd5e1;
+    border-left-color: #1d4ed8;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.sz-rec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.sz-rec-head-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.sz-rec-logo-box {
+    width: 52px;
+    height: 52px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    flex-shrink: 0;
+}
+
+.sz-rec-logo {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.sz-rec-badge {
+    display: inline-block;
+    background: #f1f5f9;
+    color: #475569;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 4px;
+}
+
+.sz-rec-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #0f172a;
+    line-height: 1.35;
+    margin: 0;
+}
+
+.sz-rec-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0 0 16px 0;
+}
+
+.sz-rec-footer {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.sz-rec-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 22px;
+    color: #ffffff !important;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none !important;
+    border-radius: 8px;
+    transition: opacity 0.2s ease, transform 0.15s ease;
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+}
+
+.sz-rec-btn:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    color: #ffffff !important;
+}
+
+/* Sidebar Specific */
+.sz-rec-sidebar {
+    margin: 16px 0;
+}
+
+.sz-rec-sidebar .sz-rec-card {
+    padding: 18px;
+}
+
+.sz-rec-sidebar .sz-rec-head-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.sz-rec-sidebar .sz-rec-btn {
+    width: 100%;
+    text-align: center;
+}
+
+/* Top Bar Specific */
+.sz-rec-top_bar {
+    margin: 0;
+    padding: 8px 16px;
+    font-size: 13px;
+    z-index: 99999;
+}
+
+.sz-rec-topbar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.sz-rec-topbar-text {
+    font-weight: 500;
+    color: #f8fafc;
+}
+
+.sz-rec-topbar-btn {
+    display: inline-block;
+    background: #2563eb;
+    color: #ffffff !important;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 14px;
+    border-radius: 6px;
+    text-decoration: none !important;
+    transition: background 0.2s ease;
+}
+
+.sz-rec-topbar-btn:hover {
+    background: #1d4ed8;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+    .sz-rec-card {
+        padding: 16px;
+    }
+    .sz-rec-head-left {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .sz-rec-btn {
+        width: 100%;
+        text-align: center;
+    }
+    .sz-rec-topbar-inner {
+        flex-direction: column;
+        gap: 6px;
+        text-align: center;
+    }
+}

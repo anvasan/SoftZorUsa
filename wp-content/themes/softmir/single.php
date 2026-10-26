@@ -267,6 +267,9 @@ while (have_posts()):
                         </div>
                     </div>
 
+                    <!-- SZ Smart Promo Sidebar Banner -->
+                    <?php echo do_shortcode('[sz_promo placement="sidebar"]'); ?>
+
                 </aside>
 
             </div>

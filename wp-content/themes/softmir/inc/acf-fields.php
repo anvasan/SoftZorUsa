@@ -1,39 +1,35 @@
 <?php
 /**
- * SoftMir — ACF Field Groups
- * Extracted from functions.php for maintainability
+ * Programmatic ACF Fields Registration
+ * Ensures fields always exist even if ACF JSON / DB is out of sync.
  */
 
-if (!defined('ABSPATH'))
+if (!defined('ABSPATH')) {
     exit;
+}
 
-function softmir_acf_fields()
-{
-    if (!function_exists('acf_add_local_field_group'))
+add_action('acf/init', function () {
+    if (!function_exists('acf_add_local_field_group')) {
         return;
+    }
 
-    // Software Top Fields (Logo, Primary Category)
-    acf_add_local_field_group([
-        'key' => 'group_software_top',
-        'title' => 'Basic Information (Logo and Category)',
-        'fields' => [
-            ['key' => 'field_sw_logo', 'label' => 'Company logo', 'name' => 'company_logo', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'medium', 'instructions' => 'Recommended size 300x150'],
-            ['key' => 'field_sw_primary_cat', 'label' => 'Main category', 'name' => 'primary_category', 'type' => 'taxonomy', 'taxonomy' => 'software_category', 'field_type' => 'select', 'allow_null' => 1, 'add_term' => 0, 'save_terms' => 0, 'load_terms' => 0, 'return_format' => 'id', 'multiple' => 0, 'instructions' => 'Select a main category for breadcrumbs and key feature pull-ups.'],
-        ],
-        'location' => [
-            [['param' => 'post_type', 'operator' => '==', 'value' => 'software']],
-        ],
-        'position' => 'normal',
-        'style' => 'default',
-        'menu_order' => 0,
-    ]);
-
-    // Software Main Fields
+    // Software Main Fields Group
     acf_add_local_field_group([
         'key' => 'group_software',
-        'title' => 'Product details',
+        'title' => 'Software Specifications',
         'fields' => [
-            ['key' => 'field_sw_short_desc', 'label' => 'Brief description', 'name' => 'short_description', 'type' => 'textarea', 'rows' => 3],
+            ['key' => 'field_sw_verdict', 'label' => 'Verdict', 'name' => 'verdict', 'type' => 'textarea', 'rows' => 4, 'instructions' => 'Editorial verdict on the software'],
+            ['key' => 'field_sw_short_desc', 'label' => 'Short Description', 'name' => 'short_description', 'type' => 'textarea', 'rows' => 3, 'instructions' => 'Short summary for cards and snippets (max 200 chars)'],
+            ['key' => 'field_sw_full_desc', 'label' => 'Full Description', 'name' => 'full_description', 'type' => 'wysiwyg', 'instructions' => 'Comprehensive review / overview of the software'],
+            ['key' => 'field_sw_advantages', 'label' => 'Pros', 'name' => 'advantages', 'type' => 'textarea', 'rows' => 4, 'instructions' => 'Key pros, one per line'],
+            ['key' => 'field_sw_disadvantages', 'label' => 'Cons', 'name' => 'disadvantages', 'type' => 'textarea', 'rows' => 4, 'instructions' => 'Key cons, one per line'],
+            ['key' => 'field_sw_best_for', 'label' => 'Best For', 'name' => 'best_for', 'type' => 'textarea', 'rows' => 3, 'instructions' => 'Target audience, one per line'],
+            ['key' => 'field_sw_bad_for', 'label' => 'Bad For', 'name' => 'bad_for', 'type' => 'textarea', 'rows' => 3, 'instructions' => 'Who should avoid it, one per line'],
+            ['key' => 'field_sw_features', 'label' => 'Key Features', 'name' => 'features', 'type' => 'textarea', 'rows' => 4, 'instructions' => 'List of core features, one per line'],
+            ['key' => 'field_sw_integrations', 'label' => 'Integrations', 'name' => 'integrations', 'type' => 'textarea', 'rows' => 3, 'instructions' => 'Integrated platforms, one per line'],
+            ['key' => 'field_sw_tech_specs', 'label' => 'Technical Specs', 'name' => 'tech_specs', 'type' => 'textarea', 'rows' => 3, 'instructions' => 'Deployment, API, compliance details'],
+            ['key' => 'field_sw_origin', 'label' => 'Country of Origin', 'name' => 'origin', 'type' => 'text', 'instructions' => 'e.g. US, DE, UK'],
+            ['key' => 'field_sw_logo', 'label' => 'Logo', 'name' => 'logo', 'type' => 'image', 'return_format' => 'url'],
             ['key' => 'field_sw_screen_1', 'label' => 'Screenshot 1', 'name' => 'screenshot_1', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
             ['key' => 'field_sw_screen_2', 'label' => 'Screenshot 2', 'name' => 'screenshot_2', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
             ['key' => 'field_sw_screen_3', 'label' => 'Screenshot 3', 'name' => 'screenshot_3', 'type' => 'image', 'return_format' => 'url', 'preview_size' => 'thumbnail', 'wrapper' => ['width' => '25']],
@@ -56,6 +52,7 @@ function softmir_acf_fields()
         'title' => 'Links and Media',
         'fields' => [
             ['key' => 'field_sw_website', 'label' => 'Website', 'name' => 'website_url', 'type' => 'url'],
+            ['key' => 'field_sw_partner_cabinet', 'label' => 'Партнёрский кабинет', 'name' => 'partner_cabinet', 'type' => 'text', 'instructions' => 'Ссылка на партнёрский кабинет или заметка (например: URL дашборда, «в программе», «письма раз в месяц»).'],
             ['key' => 'field_sw_video', 'label' => 'Video (YouTube)', 'name' => 'video_url', 'type' => 'url'],
         ],
         'location' => [
@@ -79,21 +76,7 @@ function softmir_acf_fields()
         } else {
             $order['normal'] = $required_normal_order;
         }
+
         return $order;
     });
-
-    // Integrator Fields
-    acf_add_local_field_group([
-        'key' => 'group_integrator',
-        'title' => 'Integrator details',
-        'fields' => [
-            ['key' => 'field_int_logo', 'label' => 'Logo', 'name' => 'integrator_logo', 'type' => 'image', 'return_format' => 'url'],
-            ['key' => 'field_int_website', 'label' => 'Website', 'name' => 'integrator_website', 'type' => 'url'],
-            ['key' => 'field_int_short_desc', 'label' => 'Brief description', 'name' => 'integrator_short_desc', 'type' => 'textarea', 'rows' => 3],
-        ],
-        'location' => [
-            [['param' => 'post_type', 'operator' => '==', 'value' => 'integrator']],
-        ],
-    ]);
-}
-add_action('acf/init', 'softmir_acf_fields');
+});

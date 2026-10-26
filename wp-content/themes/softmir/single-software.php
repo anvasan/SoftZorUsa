@@ -627,6 +627,9 @@
                     <a href="<?php echo home_url('/contacts/'); ?>"
                         class="btn btn-primary w-full"><?php esc_html_e('Contact', 'softmir'); ?></a>
                 </div>
+
+                <!-- SZ Smart Promo Sidebar Banner -->
+                <?php echo do_shortcode('[sz_promo placement="sidebar"]'); ?>
             </aside>
 
         </div>

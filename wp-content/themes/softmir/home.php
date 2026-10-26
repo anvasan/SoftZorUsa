@@ -68,6 +68,10 @@ $paged = get_query_var('paged') ? get_query_var('paged') : 1;
 
             <!-- Sidebar -->
             <aside class="blog-sidebar">
+                <!-- SZ Smart Promo Sidebar Banner -->
+                <div class="blog-widget" style="padding: 0; background: transparent; border: none; box-shadow: none; margin-bottom: 24px;">
+                    <?php echo do_shortcode('[sz_promo placement="sidebar"]'); ?>
+                </div>
 
                 <!-- Search Widget -->
                 <div class="blog-widget">

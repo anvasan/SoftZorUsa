@@ -21,6 +21,10 @@ jobs:
             local_dir: ./wp-content/mu-plugins/
             server_dir: wp-content/mu-plugins/
             state_name: .ftp-deploy-sync-state-muplugins-v2.json
+          - name: Smart Promotions Plugin
+            local_dir: ./wp-content/plugins/softzor-smart-promotions/
+            server_dir: wp-content/plugins/softzor-smart-promotions/
+            state_name: .ftp-deploy-sync-state-promotions-v2.json
     steps:
       - name: Get latest code
         uses: actions/checkout@v4

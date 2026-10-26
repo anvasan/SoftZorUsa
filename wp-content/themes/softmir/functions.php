@@ -310,6 +310,8 @@ function softmir_acf_fields()
         'fields' => [
             // Website
             ['key' => 'field_sw_website', 'label' => 'Website', 'name' => 'website_url', 'type' => 'url'],
+            // Partner Cabinet
+            ['key' => 'field_sw_partner_cabinet', 'label' => 'Партнёрский кабинет', 'name' => 'partner_cabinet', 'type' => 'text', 'instructions' => 'Ссылка на партнёрский кабинет или заметка (например: URL дашборда, «в программе», «письма раз в месяц»).'],
             // Video
             ['key' => 'field_sw_video', 'label' => 'Video (YouTube)', 'name' => 'video_url', 'type' => 'url'],
         ],

@@ -124,6 +124,9 @@
                     <button type="submit"
                         class="btn btn-primary filter-submit"><?php esc_html_e('Apply', 'softmir'); ?></button>
                 </form>
+                <div style="margin-top: 24px;">
+                    <?php echo do_shortcode('[sz_promo placement="sidebar"]'); ?>
+                </div>
             </div>
         </aside>
 
@@ -235,9 +238,14 @@
                         <!-- LIST VIEW -->
                         <div class="cards-list">
                             <?php $software->rewind_posts();
+                            $sw_card_idx = 0;
                             while ($software->have_posts()):
                                 $software->the_post();
+                                $sw_card_idx++;
                                 get_template_part('template-parts/card-software', 'horizontal');
+                                if ($sw_card_idx === 2) {
+                                    echo '<div style="margin: 20px 0;">' . do_shortcode('[sz_promo placement="in_content"]') . '</div>';
+                                }
                             endwhile; ?>
                         </div>
 

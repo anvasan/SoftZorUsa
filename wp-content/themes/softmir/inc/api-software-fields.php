@@ -36,80 +36,103 @@ add_action('rest_api_init', function () {
         'price_updated_date'     => ['type' => 'string'],
         'works_in_ukraine'       => ['type' => 'boolean'],
         'partner_link'           => ['type' => 'string'],
+        'partner_cabinet'        => ['type' => 'string'],
         'pretty_link'            => ['type' => 'string'],
     ];
 
     foreach ($fields as $field => $schema) {
-        register_rest_field('software', $field, [
-            'get_callback' => function ($post) use ($field, $schema) {
-                $val = get_post_meta($post['id'], $field, true);
-                if ($field === 'primary_category') {
-                    return (int)$val ?: null;
-                }
-                if ($field === 'custom_features') {
-                    if (is_array($val)) {
-                        return implode(', ', array_filter(array_map('trim', $val)));
+        foreach (['software', 'post'] as $pt) {
+            register_rest_field($pt, $field, [
+                'get_callback' => function ($post) use ($field, $schema) {
+                    $val = get_post_meta($post['id'], $field, true);
+                    if ($field === 'primary_category') {
+                        return (int)$val ?: null;
                     }
-                    return is_string($val) ? $val : '';
-                }
-                if ($schema['type'] === 'boolean') {
-                    return (bool)$val;
-                }
-                if ($schema['type'] === 'array' && is_string($val)) {
-                    $decoded = json_decode($val, true);
-                    return is_array($decoded) ? $decoded : [];
-                }
-                return $val;
-            },
-            'update_callback' => function ($value, $post) use ($field, $schema) {
-                if (!current_user_can('edit_post', $post->ID)) {
-                    return new WP_Error('rest_forbidden', 'No rights', ['status' => 403]);
-                }
+                    if ($field === 'custom_features') {
+                        if (is_array($val)) {
+                            return implode(', ', array_filter(array_map('trim', $val)));
+                        }
+                        return is_string($val) ? $val : '';
+                    }
+                    if ($schema['type'] === 'boolean') {
+                        return (bool)$val;
+                    }
+                    if ($schema['type'] === 'array' && is_string($val)) {
+                        $decoded = json_decode($val, true);
+                        return is_array($decoded) ? $decoded : [];
+                    }
+                    return $val;
+                },
+                'update_callback' => function ($value, $post) use ($field, $schema) {
+                    if (!current_user_can('edit_post', $post->ID)) {
+                        return new WP_Error('rest_forbidden', 'No rights', ['status' => 403]);
+                    }
 
-                // Primary category (sets both post_meta and ACF field)
-                if ($field === 'primary_category') {
-                    $cat_id = (int)$value;
-                    update_post_meta($post->ID, 'primary_category', $cat_id);
-                    if (function_exists('update_field')) {
-                        update_field('primary_category', $cat_id, $post->ID);
+                    // Primary category (sets both post_meta and ACF field)
+                    if ($field === 'primary_category') {
+                        $cat_id = (int)$value;
+                        update_post_meta($post->ID, 'primary_category', $cat_id);
+                        if (function_exists('update_field')) {
+                            update_field('primary_category', $cat_id, $post->ID);
+                        }
+                        return true;
+                    }
+
+                    // Custom features (Product Key Features from website - always saved as comma-separated string)
+                    if ($field === 'custom_features') {
+                        if (is_array($value)) {
+                            $features = array_filter(array_map('sanitize_text_field', $value));
+                            $features_str = implode(', ', $features);
+                        } else {
+                            $features_str = sanitize_textarea_field((string)$value);
+                        }
+                        update_post_meta($post->ID, 'custom_features', $features_str);
+                        return true;
+                    }
+
+                    // If it's an array/object, WordPress/ACF usually handles it as serialized array
+                    // but if we receive a JSON string for an array field, decode it.
+                    if ($schema['type'] === 'array' && is_string($value)) {
+                        $decoded = json_decode($value, true);
+                        $value = is_array($decoded) ? $decoded : [];
+                    }
+                    
+                    // For boolean
+                    if ($schema['type'] === 'boolean') {
+                        $value = (bool)$value ? '1' : '0';
+                    }
+
+                    update_post_meta($post->ID, $field, $value);
+
+                    if ($field === 'focus_keyword') {
+                        update_post_meta($post->ID, 'rank_math_focus_keyword', $value);
+                    }
+                    if ($field === 'partner_cabinet') {
+                        update_post_meta($post->ID, '_partner_cabinet', 'field_sw_partner_cabinet');
+                        if (function_exists('pll_get_post_translations')) {
+                            $translations = pll_get_post_translations($post->ID);
+                            if (!empty($translations)) {
+                                foreach ($translations as $t_lang => $t_id) {
+                                    if ($t_id != $post->ID) {
+                                        update_post_meta($t_id, 'partner_cabinet', sanitize_text_field($value));
+                                        update_post_meta($t_id, '_partner_cabinet', 'field_sw_partner_cabinet');
+                                    }
+                                }
+                            }
+                        }
                     }
                     return true;
-                }
-
-                // Custom features (Product Key Features from website - always saved as comma-separated string)
-                if ($field === 'custom_features') {
-                    if (is_array($value)) {
-                        $features = array_filter(array_map('sanitize_text_field', $value));
-                        $features_str = implode(', ', $features);
-                    } else {
-                        $features_str = sanitize_textarea_field((string)$value);
-                    }
-                    update_post_meta($post->ID, 'custom_features', $features_str);
-                    return true;
-                }
-
-                // If it's an array/object, WordPress/ACF usually handles it as serialized array
-                // but if we receive a JSON string for an array field, decode it.
-                if ($schema['type'] === 'array' && is_string($value)) {
-                    $decoded = json_decode($value, true);
-                    $value = is_array($decoded) ? $decoded : [];
-                }
-                
-                // For boolean
-                if ($schema['type'] === 'boolean') {
-                    $value = (bool)$value ? '1' : '0';
-                }
-
-                update_post_meta($post->ID, $field, $value);
-                return true;
-            },
-            'schema' => [
-                'type' => $schema['type'],
-                'description' => 'Meta field: ' . $field,
-                'context' => ['view', 'edit']
-            ]
-        ]);
+                },
+                'schema' => [
+                    'type' => $schema['type'],
+                    'description' => 'Meta field: ' . $field,
+                    'context' => ['view', 'edit']
+                ]
+            ]);
+        }
     }
 });
 
-require_once __DIR__ . '/prompt-templates.php';
+if (!function_exists('softmir_gemini_call')) {
+    require_once __DIR__ . '/prompt-templates.php';
+}

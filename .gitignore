@@ -1,10 +1,15 @@
-﻿/*
+/*
 !.gitignore
 !wp-content/
 
 wp-content/*
 !wp-content/themes/
 !wp-content/mu-plugins/
+!wp-content/plugins/
+
+wp-content/plugins/*
+!wp-content/plugins/softzor-smart-promotions/
+!wp-content/plugins/softzor-smart-promotions/**
 
 wp-content/themes/*
 !wp-content/themes/softmir/

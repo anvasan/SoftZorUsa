@@ -30,6 +30,15 @@ get_header();
 
     // Output Hot Offers Section
     get_template_part('template-parts/builder/hot_offers');
+    ?>
+
+    <section class="home-promo-section" style="padding: 24px 0 10px 0;">
+        <div class="container">
+            <?php echo do_shortcode('[sz_promo placement="in_content"]'); ?>
+        </div>
+    </section>
+
+    <?php
 
     // Output Group Buying Promo
     get_template_part('template-parts/builder/group_buying');
