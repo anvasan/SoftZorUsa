@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: SoftZor USA - Legacy 410 Guard & Smart Dev Indexing
- * Description: Permanently removes legacy /listing/ URLs (410 Gone) and prevents staging/coming-soon indexing automatically.
- * Version: 1.0.1
+ * Description: Permanently removes legacy /listing/ URLs (410 Gone), sets correct Global B2B titles, and prevents staging/coming-soon indexing automatically.
+ * Version: 1.0.2
  * Author: Antigravity
  */
 
@@ -27,7 +27,31 @@ if (!empty($softzor_path) && preg_match('#^/listings?(?:/|$)#i', $softzor_path))
 }
 
 // =========================================================================
-// 2. SMART DEV MODE: Auto-detect Coming Soon / Staging mode
+// 2. GLOBAL SEO TITLES & DESCRIPTION (SOFTZOR USA / GLOBAL STANDARD)
+// =========================================================================
+add_filter('pre_get_document_title', function ($title) {
+    if (is_front_page() || is_home()) {
+        return 'SoftZor — B2B Software Directory & SaaS Reviews';
+    }
+    return $title;
+}, 9999);
+
+add_filter('rank_math/frontend/title', function ($title) {
+    if (is_front_page() || is_home()) {
+        return 'SoftZor — B2B Software Directory & SaaS Reviews';
+    }
+    return $title;
+}, 9999);
+
+add_filter('rank_math/frontend/description', function ($desc) {
+    if (is_front_page() || is_home()) {
+        return 'Discover, compare, and choose top-rated B2B software and SaaS platforms for your business with in-depth feature breakdowns and expert reviews.';
+    }
+    return $desc;
+}, 9999);
+
+// =========================================================================
+// 3. SMART DEV MODE: Auto-detect Coming Soon / Staging mode
 // =========================================================================
 /**
  * Checks whether the site is in Coming Soon / Maintenance mode.
