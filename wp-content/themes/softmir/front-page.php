@@ -25,11 +25,11 @@ get_header();
     get_template_part('template-parts/builder/categories');
 
 
-    // Output Popular Products Section
-    get_template_part('template-parts/builder/popular_products');
-
     // Output Hot Offers Section
     get_template_part('template-parts/builder/hot_offers');
+
+    // Output Popular Products Section
+    get_template_part('template-parts/builder/popular_products');
     ?>
 
     <section class="home-promo-section" style="padding: 24px 0 10px 0;">
