@@ -94,7 +94,10 @@
                 <?php 
                 $promo_text = get_field('promo_text');
                 $promo_deadline = get_field('promo_deadline');
-                if ($promo_text): 
+                $promo_deadline_date = get_field('promo_deadline_date');
+                // Hide expired promos (empty date = ongoing offer)
+                $promo_is_expired = $promo_deadline_date && intval($promo_deadline_date) < intval(date('Ymd'));
+                if ($promo_text && !$promo_is_expired): 
                     $promo_website = get_field('website_url');
                     $promo_is_affiliate = get_post_meta(get_the_ID(), 'is_affiliate', true);
                     $promo_target_url = '';

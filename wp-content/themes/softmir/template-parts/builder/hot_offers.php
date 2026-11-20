@@ -1,6 +1,7 @@
 <?php
 // Hot Offers Module - displays software with active promo
 $title = '🔥 ' . __('Hot Offers', 'softmir');
+$today = date('Ymd');
 
 $offers = new WP_Query([
     'post_type' => 'software',
@@ -16,7 +17,26 @@ $offers = new WP_Query([
             'key'     => 'promo_text',
             'value'   => '',
             'compare' => '!=',
-        ]
+        ],
+        // Exclude expired: empty date (ongoing) OR date >= today
+        [
+            'relation' => 'OR',
+            [
+                'key'     => 'promo_deadline_date',
+                'compare' => 'NOT EXISTS',
+            ],
+            [
+                'key'     => 'promo_deadline_date',
+                'value'   => '',
+                'compare' => '=',
+            ],
+            [
+                'key'     => 'promo_deadline_date',
+                'value'   => $today,
+                'compare' => '>=',
+                'type'    => 'DATE',
+            ],
+        ],
     ],
 ]);
 
@@ -47,6 +67,9 @@ if ($offers->have_posts()):
                             } else {
                                 $logo_url = $logo;
                             }
+                        }
+                        if (!$logo_url && has_post_thumbnail()) {
+                            $logo_url = get_the_post_thumbnail_url(get_the_ID(), 'medium');
                         }
                         
                         $promo_text = get_field('promo_text');

@@ -124,22 +124,6 @@ if (function_exists('acf_add_local_field_group')):
                 'default_value' => 10,
                 'min' => 1,
             ),
-            array(
-                'key' => 'field_promo_text',
-                'label' => 'Hot Offer Text (Promo)',
-                'name' => 'promo_text',
-                'type' => 'text',
-                'instructions' => 'Example: "Cyber Monday: 50% Off Lifetime"',
-            ),
-            array(
-                'key' => 'field_promo_deadline',
-                'label' => 'Hot Offer Deadline',
-                'name' => 'promo_deadline',
-                'type' => 'date_picker',
-                'display_format' => 'd/m/Y',
-                'return_format' => 'Y-m-d',
-                'instructions' => 'When does the offer expire?',
-            ),
         ),
         'location' => array(
             array(
@@ -155,6 +139,54 @@ if (function_exists('acf_add_local_field_group')):
         'style' => 'default',
         'label_placement' => 'top',
         'instruction_placement' => 'label',
+    ));
+
+    // === PROMO FIELDS (HOT OFFERS) ===
+    acf_add_local_field_group(array(
+        'key' => 'group_software_promo',
+        'title' => 'Hot Deals & Promotions',
+        'fields' => array(
+            array(
+                'key' => 'field_promo_text',
+                'label' => 'Promo Text (or Coupon Code)',
+                'name' => 'promo_text',
+                'type' => 'textarea',
+                'instructions' => 'If filled, displays a highlighted promo banner on the software card and homepage.',
+                'rows' => 3,
+            ),
+            array(
+                'key' => 'field_promo_deadline',
+                'label' => 'Offer Validity (Display Text)',
+                'name' => 'promo_deadline',
+                'type' => 'text',
+                'instructions' => 'Human-readable text. Example: "Nov 30, 2026", "End of month", "Ongoing"',
+            ),
+            array(
+                'key' => 'field_promo_deadline_date',
+                'label' => 'Offer End Date (for Auto-Expiration)',
+                'name' => 'promo_deadline_date',
+                'type' => 'date_picker',
+                'display_format' => 'm/d/Y',
+                'return_format' => 'Ymd',
+                'first_day' => 1,
+                'instructions' => 'Machine-readable expiration date. Leave empty for permanent/ongoing deals.',
+            ),
+        ),
+        'location' => array(
+            array(
+                array(
+                    'param' => 'post_type',
+                    'operator' => '==',
+                    'value' => 'software',
+                ),
+            ),
+        ),
+        'menu_order' => 7,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'show_in_rest' => true,
     ));
 
 endif;
